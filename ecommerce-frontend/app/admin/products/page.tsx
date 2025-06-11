@@ -42,8 +42,8 @@ export default function ProductPage() {
 
   // Load data
   useEffect(() => {
-    fetchProducts().then(res => setProducts(res.data as any[]));
-    fetchCategories().then(res => setCategories(res.data as any[]));
+    fetchProducts().then(res => setProducts(res.data as Product[]));
+    fetchCategories().then(res => setCategories(res.data as Category[]));
   }, []);
 
   // Xử lý mở form thêm mới
