@@ -18,7 +18,8 @@ export default function LoginPage() {
     try {
       const response = await login(username, password);
       // Lưu JWT token vào localStorage hoặc state
-      localStorage.setItem("token", response.data.token);
+      const data = response.data as { token: string };
+      localStorage.setItem("token", data.token);
       // Chuyển hướng đến trang chủ hoặc trang dashboard sau khi đăng nhập thành công
       router.push("/");
     } catch (error: any) {

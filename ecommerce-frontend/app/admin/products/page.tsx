@@ -42,8 +42,8 @@ export default function ProductPage() {
 
   // Load data
   useEffect(() => {
-    fetchProducts().then(res => setProducts(res.data));
-    fetchCategories().then(res => setCategories(res.data));
+    fetchProducts().then(res => setProducts(res.data as any[]));
+    fetchCategories().then(res => setCategories(res.data as any[]));
   }, []);
 
   // Xử lý mở form thêm mới
@@ -92,7 +92,7 @@ export default function ProductPage() {
       // Thêm mới
       createProduct(form)
         .then(res => {
-          setProducts([...products, res.data]);
+          setProducts([...products, res.data as Product]);
           closeModal();
         });
     }
@@ -202,7 +202,8 @@ export default function ProductPage() {
                 setUploading(true);
                 try{
                   const res = await uploadImage(e.target.files[0]);
-                  setForm({ ...form, imageUrl: res.data.imageUrl });
+                  const data = res.data as { imageUrl: string };
+                  setForm({ ...form, imageUrl: data.imageUrl });
                 } catch (error) {
                   alert("Tải ảnh lên thất bại!");
                 }

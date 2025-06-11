@@ -5,14 +5,14 @@ import { fetchCategories, createCategory, updateCategory, deleteCategory } from 
 
 export default function Category(){
   const [categories, setCategories] = useState<any[]>([]);
-  const [name, setName] = useState<String>('');
-  const [description, setDescription] = useState<String>('');
+  const [name, setName] = useState<string>('');
+  const [description, setDescription] = useState<string>('');
   const [isEditing, setIsEditing] = useState<boolean>(false);
   const [editCategoryId, setEditCategoryId] 
       = useState<number | null>(null);
 
   useEffect( () => {
-    fetchCategories().then((res) => setCategories(res.data))
+    fetchCategories().then((res) => setCategories(res.data as any[]))
     .catch((err) => console.error(
         'Lỗi khi tải danh sách nhóm sản phẩm', err));
   }, []);

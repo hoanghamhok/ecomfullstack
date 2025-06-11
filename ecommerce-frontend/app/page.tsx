@@ -8,7 +8,7 @@ export default function Home() {
 
   useEffect(() => {
     fetchProducts().then((res) => {
-      setProducts(res.data);
+      setProducts(res.data as any[]);
     })
   }, []);
 
@@ -25,7 +25,7 @@ export default function Home() {
     <div>
       {/* Banner Hero */}
       <section className="bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-500 py-16 text-center text-white">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Chào mừng đến với Trung Shop</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Chào mừng đến với Go Cart</h1>
         <p className="text-lg md:text-2xl mb-8">Nơi trải nghiệm mua sắm sản phẩm công nghệ, thời trang, gia dụng và nhiều hơn nữa!</p>
         <a
           href="#products"
@@ -75,7 +75,7 @@ export default function Home() {
                   <div className="text-gray-600 text-sm flex-1 mb-2">{p.description}</div>
                   <div className="font-bold text-blue-600 text-xl mb-2">{Number(p.price).toLocaleString()} ₫</div>
                   <a
-                    href={`/products/${p.id}`}
+                    href={`shop/product/${p.id}`}
                     className="bg-blue-600 text-white py-2 px-4 rounded hover:bg-blue-700 text-center transition"
                   >
                     Xem chi tiết
@@ -90,7 +90,7 @@ export default function Home() {
 
       {/* Footer đơn giản */}
       <footer className="mt-12 py-8 bg-gray-800 text-center text-gray-200">
-        &copy; {new Date().getFullYear()} Trung Shop. All rights reserved.
+        &copy; {new Date().getFullYear()} Go Cart. All rights reserved.
       </footer>
     </div>
   );

@@ -1,6 +1,7 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using Models; 
+using Models;
+using System.Linq;
 namespace Controllers
 {
     [Route("api/products")]
@@ -108,6 +109,17 @@ namespace Controllers
             await _context.SaveChangesAsync();
 
             return Ok(new { message = "Xóa sản phẩm thành công." });
+        }
+        // GET: api/products/category/{categoryId}
+
+        [HttpGet("categories/{id}")]
+        public async Task<IActionResult> GetProductsByCategory(int id)
+        {
+            var products = await _context.Products
+                .Where(p => p.CategoryId == id)
+                .ToListAsync();
+
+            return Ok(products);
         }
     }
 }
