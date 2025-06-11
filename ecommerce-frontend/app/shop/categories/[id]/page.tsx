@@ -3,19 +3,10 @@ import Link from "next/link";
 type Product = {
   id: number;
   name: string;
-  description?: string;
   price: number;
-  instock: number;
   imageUrl?: string;
-  categoryId: number;
-  category?: {
-    id: number;
-    name: string;
-    description?: string;
-    createdAt: string;
-  };
-  createdAt: string; // ISO string từ DateTime bên backend
 };
+
 
 type Category = {
   id: number;
