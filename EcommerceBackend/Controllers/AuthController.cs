@@ -52,7 +52,7 @@ public class AuthController : Controller{
                 user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Role)
         };
-
+        Console.WriteLine("----- Claims: " + String.Join(", ", claims.Select(c => c.Type + ": " + c.Value)));
         var token = new JwtSecurityToken(
             issuer: _config["Jwt:Issuer"],
             audience: _config["Jwt:Audience"],

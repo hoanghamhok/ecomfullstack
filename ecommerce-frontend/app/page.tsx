@@ -2,6 +2,7 @@
 
 import React, { use, useEffect } from "react";
 import { addToCart, fetchProducts } from "./services/api";
+import Link from "next/link";
 
 export default function Home() {
   const [products, setProducts] = React.useState<any[]>([]);
@@ -25,7 +26,7 @@ export default function Home() {
     <div>
       {/* Banner Hero */}
       <section className="bg-gradient-to-br from-blue-600 via-indigo-500 to-purple-500 py-16 text-center text-white">
-        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Chào mừng đến với Go Cart</h1>
+        <h1 className="text-4xl md:text-5xl font-extrabold mb-4 drop-shadow-lg">Chào mừng đến với Trung Shop</h1>
         <p className="text-lg md:text-2xl mb-8">Nơi trải nghiệm mua sắm sản phẩm công nghệ, thời trang, gia dụng và nhiều hơn nữa!</p>
         <a
           href="#products"
@@ -80,7 +81,7 @@ export default function Home() {
                   >
                     Xem chi tiết
                   </a>
-                  <button onClick={() => handleAddToCart(p.id)}>Thêm vào giỏ hàng</button>
+                  <button onClick={() => handleAddToCart(p.id)} className="bg-yellow-600 text-white rounded py-2 mt-2">Thêm vào giỏ hàng</button>
                 </div>
               ))
             )}
@@ -88,9 +89,17 @@ export default function Home() {
         </div>
       </section>
 
+      {/* Link đến trang giỏ hàng */}
+      <div className="text-center mt-4">
+        <Link href="/cart" className="inline-block bg-blue-600 text-white 
+                  py-2 px-4 rounded hover:bg-blue-700 transition">
+            Xem giỏ hàng
+        </Link>
+      </div>
+
       {/* Footer đơn giản */}
       <footer className="mt-12 py-8 bg-gray-800 text-center text-gray-200">
-        &copy; {new Date().getFullYear()} Go Cart. All rights reserved.
+        &copy; {new Date().getFullYear()} GoCart. All rights reserved.
       </footer>
     </div>
   );

@@ -61,4 +61,22 @@ export const addToCart = (data: {productId: number, quantity: number}) => {
   });
 }
 
+//Lấy danh sách sản phẩm trong giỏ
+export const fetchCart = () => {
+  return API.get("/cart/get", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+}
+
+//Cập nhật số lượng sản phẩm trong giỏ
+export const updateCartItem = (productId: number, quantity: number) => {
+  return API.put('/cart/update-quantity', {productId: productId, quantity}, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+}
+
 export default API;
