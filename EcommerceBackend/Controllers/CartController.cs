@@ -3,7 +3,8 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
 using Models;
 
-namespace Controllers{
+namespace Controllers
+{
     [Route("api/Cart")]
     [ApiController]
     public class CartController : ControllerBase
@@ -106,10 +107,58 @@ namespace Controllers{
             await _context.SaveChangesAsync();
             return Ok(new { message = "Cập nhật số lượng thành công." });
         }
-    }
+        [HttpPost("checkout")]
+        [Authorize]
+        public async Task<IActionResult> Checkout()
+        {
+            var userId = GetUserIdFromToken();
+            if (userId == null)
+                return Unauthorized("Không tìm thấy người dùng.");
 
-    public class CartRequest{
-        public int ProductId {get; set;}
-        public int Quantity {get; set;}
+            var cartItems = await _context.Carts
+                .Where(c => c.UserId == userId)
+                .Include(c => c.Product)
+                .ToListAsync();
+
+            if (!cartItems.Any())
+                return BadRequest("Giỏ hàng trống, không thể thanh toán.");
+
+            // Tính tổng tiền
+            decimal totalAmount = cartItems.Sum(item => item.Quantity * item.Product.Price);
+
+            // Tạo đơn hàng (Order)
+            var order = new Order
+            {
+                UserId = userId.Value,
+                OrderDate = DateTime.Now,
+                TotalAmount = totalAmount
+            };
+            _context.Orders.Add(order);
+            await _context.SaveChangesAsync();
+
+            // Tạo chi tiết đơn hàng
+            foreach (var item in cartItems)
+            {
+                var detail = new OrderDetail
+                {
+                    OrderId = order.OrderId,
+                    ProductId = item.ProductId,
+                    Quantity = item.Quantity,
+                    UnitPrice = item.Product.Price
+                };
+                _context.OrderDetails.Add(detail);
+            }
+
+            // Xóa giỏ hàng
+            _context.Carts.RemoveRange(cartItems);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Thanh toán thành công", orderId = order.OrderId });
+        }
+        public class CartRequest
+        {
+            public int ProductId { get; set; }
+            public int Quantity { get; set; }
+        }
     }
 }
