@@ -90,12 +90,12 @@ export default function Home() {
       </section>
 
       {/* Link đến trang giỏ hàng */}
-      <div className="text-center mt-4">
+      {/* <div className="text-center mt-4">
         <Link href="/cart" className="inline-block bg-blue-600 text-white 
                   py-2 px-4 rounded hover:bg-blue-700 transition">
             Xem giỏ hàng
         </Link>
-      </div>
+      </div> */}
 
       {/* Footer đơn giản */}
       <footer className="mt-12 py-8 bg-gray-800 text-center text-gray-200">

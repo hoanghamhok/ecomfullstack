@@ -3,7 +3,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
-
+import AddToCartButton from "@/components/AddToCartButton";
 type Product = {
   id: number;
   name: string;
@@ -49,6 +49,7 @@ export default function ShopPage() {
             >
               Xem chi tiết
             </Link>
+            <AddToCartButton productId={product.id} />
           </div>
         ))}
       </div>

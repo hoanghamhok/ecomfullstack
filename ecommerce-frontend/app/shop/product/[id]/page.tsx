@@ -1,5 +1,5 @@
 import Link from "next/link";
-
+import AddToCartButton from "@/components/AddToCartButton"; // ✅ Import nút thêm vào giỏ hàng
 interface Props {
   params: {
     id: string;
@@ -49,9 +49,7 @@ export default async function ProductDetailPage({ params }: Props) {
             {product.price.toLocaleString()} VND
           </p>
           <p className="text-gray-500">Kho: {product.instock}</p>
-          <button className="bg-orange-500 hover:bg-orange-600 text-white px-6 py-3 rounded-lg shadow-md transition">
-            Thêm vào giỏ hàng
-          </button>
+          <AddToCartButton productId={product.id} />
         </div>
       </div>
 
