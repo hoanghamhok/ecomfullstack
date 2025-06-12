@@ -1,5 +1,6 @@
 import Link from "next/link";
-import AddToCartButton from "@/components/AddToCartButton"; // ✅ Import nút thêm vào giỏ hàng
+import AddToCartButton from "@/components/AddToCartButton";
+
 interface Props {
   params: {
     id: string;
@@ -17,7 +18,6 @@ export default async function ProductDetailPage({ params }: Props) {
 
   const product = await productRes.json();
 
-  // Lấy danh sách sản phẩm liên quan (theo categoryId)
   const relatedRes = await fetch(`http://localhost:5091/api/products/category/${product.categoryId}`, {
     cache: "no-store",
   });
@@ -25,7 +25,7 @@ export default async function ProductDetailPage({ params }: Props) {
   const relatedProducts = relatedRes.ok ? await relatedRes.json() : [];
 
   return (
-    <div className="max-w-6xl mx-auto py-10 px-4 space-y-10">
+    <div className="max-w-6xl mx-auto px-4 py-10 space-y-12">
       {/* Breadcrumb */}
       <nav className="text-sm text-gray-500 mb-4">
         <Link href="/" className="hover:text-blue-600">Trang chủ</Link> &gt;{" "}
@@ -34,45 +34,47 @@ export default async function ProductDetailPage({ params }: Props) {
       </nav>
 
       {/* Chi tiết sản phẩm */}
-      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 border p-6 rounded-lg shadow">
-        <div>
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-8 bg-white rounded-lg shadow-lg p-6">
+        <div className="flex justify-center items-center">
           <img
-            src={product.imageUrl}
+            src={product.imageUrl || "https://via.placeholder.com/400"}
             alt={product.name}
-            className="w-full h-auto object-cover rounded-lg"
+            className="rounded-lg max-h-[400px] w-full object-contain"
           />
         </div>
-        <div className="space-y-4">
-          <h1 className="text-3xl font-bold text-gray-800">{product.name}</h1>
-          <p className="text-gray-600">{product.description}</p>
-          <p className="text-2xl text-red-600 font-semibold">
-            {product.price.toLocaleString()} VND
-          </p>
-          <p className="text-gray-500">Kho: {product.instock}</p>
+        <div className="space-y-5">
+          <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
+          <p className="text-gray-600 text-base">{product.description}</p>
+          <div className="text-2xl font-semibold text-red-600">
+            {product.price.toLocaleString()} ₫
+          </div>
+          <p className="text-sm text-gray-500">Tình trạng: {product.instock > 0 ? 'Còn hàng' : 'Hết hàng'}</p>
           <AddToCartButton productId={product.id} />
         </div>
       </div>
 
       {/* Sản phẩm liên quan */}
       <div>
-        <h2 className="text-xl font-semibold mb-4 text-gray-800">Sản phẩm liên quan</h2>
-        <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+        <h2 className="text-2xl font-semibold text-gray-800 mb-6">Sản phẩm liên quan</h2>
+        <div className="grid gap-6 grid-cols-2 md:grid-cols-4">
           {relatedProducts
             .filter((p: any) => p.id !== product.id)
             .slice(0, 4)
             .map((p: any) => (
               <Link
-                href={`/shop/product/${p.id}`}
                 key={p.id}
-                className="border p-3 rounded-lg hover:shadow-md transition block"
+                href={`/shop/product/${p.id}`}
+                className="bg-white rounded-lg shadow hover:shadow-xl transition p-4 flex flex-col"
               >
                 <img
-                  src={p.imageUrl}
+                  src={p.imageUrl || "https://via.placeholder.com/200"}
                   alt={p.name}
-                  className="w-full h-40 object-cover rounded mb-2"
+                  className="rounded-md h-40 object-contain mb-3"
                 />
-                <h3 className="text-sm font-medium text-gray-700">{p.name}</h3>
-                <p className="text-red-500 font-semibold">{p.price.toLocaleString()} VND</p>
+                <h3 className="text-gray-800 font-medium">{p.name}</h3>
+                <p className="text-red-500 text-sm font-semibold mt-1">
+                  {p.price.toLocaleString()} ₫
+                </p>
               </Link>
             ))}
         </div>

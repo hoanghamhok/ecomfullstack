@@ -121,5 +121,17 @@ namespace Controllers
 
             return Ok(products);
         }
+        [HttpGet("search")]
+        public IActionResult Search(string keyword)
+        {
+            if (string.IsNullOrWhiteSpace(keyword))
+                return BadRequest("Từ khóa không hợp lệ");
+
+            var results = _context.Products
+                .Where(p => p.Name.Contains(keyword))
+                .ToList();
+
+            return Ok(results);
+        }
     }
 }

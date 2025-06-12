@@ -6,7 +6,7 @@ export default function AddToCartButton({ productId }: { productId: number }) {
   return (
     <button
       onClick={() => handleAddToCart(productId)}
-      className="bg-yellow-600 text-white rounded py-2 px-4 mt-2"
+      className="w-full bg-yellow-500 hover:bg-yellow-600 text-white rounded py-2"
     >
       Thêm vào giỏ hàng
     </button>

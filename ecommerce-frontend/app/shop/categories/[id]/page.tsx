@@ -25,7 +25,7 @@ export default async function ProductsByCategoryPage({
   // Gọi API lấy danh mục (để hiện tên)
   const [categoryRes, productsRes] = await Promise.all([
     fetch(`http://localhost:5091/api/categories/${categoryId}`, { cache: "no-store" }),
-    fetch(`http://localhost:5091/api/products/category/${categoryId}`, { cache: "no-store" }),
+    fetch(`http://localhost:5091/api/products/categories/${categoryId}`, { cache: "no-store" }),
   ]);
 
   if (!categoryRes.ok || !productsRes.ok) {
