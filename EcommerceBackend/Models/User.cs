@@ -28,6 +28,7 @@ namespace Models{
         [StringLength(20)]
         [Column(TypeName = "varchar(20)")]
         public string Phone {get; set;}
+        public string Email {get; set;} 
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         public DateTime CreatAt {get; set;} = DateTime.UtcNow;

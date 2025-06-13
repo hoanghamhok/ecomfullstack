@@ -29,7 +29,7 @@ namespace Models{
 
         [Column(TypeName = "nvarchar(255)")]
         public string? ImageUrl {get; set;}
-
+         public int? Discount { get; set; }
         [Required]
         [ForeignKey("Category")]
         public int CategoryId {get; set;}

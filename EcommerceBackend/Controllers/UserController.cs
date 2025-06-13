@@ -2,14 +2,16 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Models;
 
-namespace Controllers{
+namespace Controllers
+{
     [ApiController]
     [Route("api/users")]
     public class UserController : ControllerBase
     {
         private readonly AppDbContext _context;
 
-        public UserController(AppDbContext context){
+        public UserController(AppDbContext context)
+        {
             _context = context;
         }
 
@@ -23,39 +25,68 @@ namespace Controllers{
                 u => u.Username == request.Username))
                 return BadRequest("Username đã tồn tại.");
 
-            var user = new User{
+            var user = new User
+            {
                 Username = request.Username,
                 Password = BCrypt.Net.BCrypt.HashPassword(
                                         request.Password),
                 FullName = request.FullName,
                 Role = "nhanvien",
                 Phone = request.Phone,
+                Email = request.Email + "@gmail.com",
                 IsActive = true
             };
 
             _context.Users.Add(user);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetUser), 
-                            new {id = user.Id}, user);   
+            return CreatedAtAction(nameof(GetUser),
+                            new { id = user.Id }, user);
         }
 
         //Lấy người dùng
         [HttpGet("{id}")]
-        public async Task<ActionResult<User>> GetUser(int id){
+        public async Task<ActionResult<User>> GetUser(int id)
+        {
             var user = await _context.Users.FindAsync(id);
             if (user == null)
                 return NotFound();
             return user;
         }
 
+        [HttpPost("register")]
+        public async Task<IActionResult> Register(CreateUserRequest dto)
+        {
+            var userExists = await _context.Users.AnyAsync(u => u.Username == dto.Username || u.Email == dto.Email);
+            if (userExists)
+                return BadRequest("Tên người dùng hoặc email đã tồn tại");
+            var user = new User
+            {
+                Username = dto.Username,
+                Email = dto.Email,
+                Password = BCrypt.Net.BCrypt.HashPassword(dto.Password),
+                FullName = dto.FullName,
+                Phone = dto.Phone,
+                Role = "nhanvien",
+                IsActive = true
+            };
 
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Đăng ký thành công" });
+        }
     }
 
-    public class CreateUserRequest{
-        public string Username {get; set;}
-        public string Password {get; set;}
-        public string FullName {get; set;}
-        public string Phone {get; set;}
+    public class CreateUserRequest
+    {
+        public string Username { get; set; }
+        public string Password { get; set; }
+        public string FullName { get; set; }
+        public string Phone { get; set; }
+        public string Email
+        {
+            get; set;
+        }
     }
 }

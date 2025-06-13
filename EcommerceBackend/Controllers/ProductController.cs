@@ -16,13 +16,28 @@ namespace Controllers
 
         // GET: api/products
         [HttpGet]
-        public async Task<IActionResult> GetAll()
+        public async Task<ActionResult<IEnumerable<ProductDto>>> GetProducts()
         {
             var products = await _context.Products
-                .Include(p => p.Category)
-                .OrderByDescending(p => p.Id)
+                .Include(p => p.Category) // ✅ Bao gồm dữ liệu danh mục
                 .ToListAsync();
-            return Ok(products);
+
+            var result = products.Select(p => new ProductDto
+            {
+                Id = p.Id,
+                Name = p.Name,
+                Price = p.Price,
+                Discount = p.Discount,Description = p.Description,
+                ImageUrl = p.ImageUrl,Instock = p.Instock,
+                PriceAfterDiscount = p.Discount.HasValue
+                    ? Math.Round(p.Price * (1 - (decimal)p.Discount.Value / 100), 0)
+                    : p.Price,
+
+                CategoryId = p.CategoryId,
+                CategoryName = p.Category != null ? p.Category.Name : null
+            });
+
+            return Ok(result);
         }
 
         // GET: api/products/{id}
@@ -132,6 +147,19 @@ namespace Controllers
                 .ToList();
 
             return Ok(results);
+        }
+        public class ProductDto
+        {
+            public int Id { get; set; }
+            public string Name { get; set; }
+            public decimal Price { get; set; }
+            public string? Description { get; set; }
+            public string? ImageUrl { get; set; }
+            public int Instock { get; set; }
+            public int? Discount { get; set; }
+            public decimal PriceAfterDiscount { get; set; }
+            public int CategoryId { get; set; }
+            public string? CategoryName { get; set; }
         }
     }
 }

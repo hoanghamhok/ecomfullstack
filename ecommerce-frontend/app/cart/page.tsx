@@ -14,7 +14,7 @@ import {
   Truck,
   Shield,
   Gift,
-  CheckCircle
+  CheckCircle,X
 } from 'lucide-react';
 import Link from 'next/link';
 
@@ -27,6 +27,8 @@ export default function CartPage() {
     const [removingItems, setRemovingItems] = useState<Set<number>>(new Set());
     const [promoCode, setPromoCode] = useState('');
     const [discount, setDiscount] = useState(0);
+    const [showSuccess, setShowSuccess] = useState<{ visible: boolean; orderId?: string }>({ visible: false });
+
 
     // Hàm lấy danh sách sản phẩm trong giỏ hàng
     useEffect(() => {
@@ -131,14 +133,19 @@ export default function CartPage() {
             if (!res.ok) {
                 throw new Error(data.message || "Lỗi không xác định");
             }
-
+            if (res.ok) {
+                setShowSuccess({ visible: true, orderId: data.orderId });
+                setCartItems([]);
+                setTotal(0);
+                setTimeout(() => setShowSuccess({ visible: false }), 5000); // Tự động ẩn sau 5s
+            }
             // Success notification with animation
-            setCartItems([]);
-            setTotal(0);
-            setDiscount(0);
+            // setCartItems([]);
+            // setTotal(0);
+            // setDiscount(0);
             
             // Show success modal or redirect
-            alert("Thanh toán thành công! Mã đơn hàng: " + data.orderId);
+            // alert("Thanh toán thành công! Mã đơn hàng: " + data.orderId);
             
         } catch (error: any) {
             alert("Lỗi khi thanh toán: " + error.message);
@@ -215,6 +222,35 @@ export default function CartPage() {
                         <h1 className="text-3xl md:text-4xl font-bold text-slate-900">Giỏ hàng của bạn</h1>
                         <p className="text-slate-600 mt-1">{cartItems.length} sản phẩm</p>
                     </div>
+                {showSuccess.visible && (
+                    <div className="fixed top-6 left-1/2 -translate-x-1/2 z-50">
+                        <div className="flex items-center bg-white border border-emerald-200 shadow-xl rounded-2xl px-6 py-4 space-x-3 animate-fade-in">
+                        <CheckCircle className="w-7 h-7 text-emerald-500" />
+                        <div>
+                            <div className="font-bold text-emerald-700 text-lg">Thanh toán thành công!</div>
+                            <div className="text-slate-600 text-sm">
+                            Mã đơn hàng: <span className="font-semibold">{showSuccess.orderId}</span>
+                            </div>
+                        </div>
+                        <button
+                            className="ml-4 p-1 rounded hover:bg-slate-100"
+                            onClick={() => setShowSuccess({ visible: false })}
+                            aria-label="Đóng"
+                        >
+                            <X className="w-5 h-5 text-slate-400" />
+                        </button>
+                        </div>
+                        <style jsx>{`
+                        .animate-fade-in {
+                            animation: fadeInScale 0.4s cubic-bezier(.4,0,.2,1);
+                        }
+                        @keyframes fadeInScale {
+                            from { opacity: 0; transform: scale(0.95) translateY(-10px);}
+                            to { opacity: 1; transform: scale(1) translateY(0);}
+                        }
+                        `}</style>
+                    </div>
+                    )}
                 </div>
 
                 {cartItems.length === 0 ? (

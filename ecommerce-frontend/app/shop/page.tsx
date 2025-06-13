@@ -30,7 +30,7 @@ type Product = {
   category?: string;
   rating?: number;
   reviews?: number;
-  discount?: number;
+  // discount?: number;
   isNew?: boolean;
   isBestSeller?: boolean;
 };
@@ -44,7 +44,7 @@ export default function ShopPage() {
   const [loading, setLoading] = useState(true);
   const [viewMode, setViewMode] = useState<ViewMode>('grid');
   const [sortBy, setSortBy] = useState<SortOption>('name');
-  const [priceRange, setPriceRange] = useState({ min: 0, max: 10000000 });
+  const [priceRange, setPriceRange] = useState({ min: 0, max: Infinity });
   const [selectedCategories, setSelectedCategories] = useState<string[]>([]);
   const [showFilters, setShowFilters] = useState(false);
   const [searchInput, setSearchInput] = useState('');
@@ -79,7 +79,7 @@ export default function ShopPage() {
           rating: 4.5 + Math.random() * 0.5,
           reviews: Math.floor(Math.random() * 200) + 10,
           category: categories[Math.floor(Math.random() * categories.length)],
-          discount: Math.random() > 0.7 ? Math.floor(Math.random() * 30) + 5 : 0,
+          // discount: Math.random() > 0.7 ? Math.floor(Math.random() * 30) + 5 : 0,
           isNew: Math.random() > 0.8,
           isBestSeller: Math.random() > 0.85
         }));
@@ -259,9 +259,9 @@ export default function ShopPage() {
               >
                 <SlidersHorizontal className="w-4 h-4" />
                 <span>Bộ lọc</span>
-                {(selectedCategories.length > 0 || priceRange.min > 0 || priceRange.max < 10000000) && (
+                {(selectedCategories.length > 0 || priceRange.min > 0 || priceRange.max < 1000000000) && (
                   <span className="bg-emerald-500 text-white text-xs px-2 py-1 rounded-full">
-                    {selectedCategories.length + (priceRange.min > 0 || priceRange.max < 10000000 ? 1 : 0)}
+                    {selectedCategories.length + (priceRange.min > 0 || priceRange.max < 1000000000 ? 1 : 0)}
                   </span>
                 )}
               </button>
@@ -419,11 +419,7 @@ export default function ShopPage() {
                         BÁN CHẠY
                       </span>
                     )}
-                    {product.discount && product.discount > 0 && (
-                      <span className="bg-red-500 text-white text-xs px-2 py-1 rounded-full font-semibold">
-                        -{product.discount}%
-                      </span>
-                    )}
+                    
                   </div>
 
                   {/* Wishlist Button */}
@@ -478,7 +474,7 @@ export default function ShopPage() {
 
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
-                        {product.discount && product.discount > 0 ? (
+                        {/* {product.discount && product.discount > 0 ? (
                           <>
                             <span className={`font-bold text-emerald-600 ${
                               viewMode === 'list' ? 'text-2xl' : 'text-xl'
@@ -495,7 +491,7 @@ export default function ShopPage() {
                           }`}>
                             {product.price.toLocaleString()}₫
                           </span>
-                        )}
+                        )} */}
                       </div>
                     </div>
 
@@ -524,7 +520,7 @@ export default function ShopPage() {
                     {/* <button className={`w-full bg-emerald-500 text-white py-3 px-6 rounded-xl font-semibold hover:bg-emerald-600 transition-all duration-200 hover:shadow-lg transform hover:-translate-y-0.5 flex items-center justify-center space-x-2 ${
                       viewMode === 'list' ? 'sm:flex-shrink-0' : ''
                     }`}> */}
-                      <AddToCartButton productId={product.id}/>
+                      <AddToCartButton  productId={product.id}/>
                       {/* <ShoppingCart className="w-4 h-4" />
                       <span>Thêm vào giỏ</span> */}
                     {/* </button> */}

@@ -37,18 +37,20 @@ public class AuthController : Controller{
         return Ok(new {Token = token, User = user});
 
     }
+    
 
     //Phương thức tạo token
-    private String GenerateJwtToken(User user){
+    private String GenerateJwtToken(User user)
+    {
         var jwtKey = _config["Jwt:Key"] ?? throw new InvalidOperationException("JWT key chưa được cấu hình");
-        var securityKey = new 
+        var securityKey = new
             SymmetricSecurityKey(
                 Encoding.UTF8.GetBytes(jwtKey));
         var credentials = new SigningCredentials(
             securityKey, SecurityAlgorithms.HmacSha256);
-        
+
         var claims = new[]{
-            new Claim(JwtRegisteredClaimNames.Sub, 
+            new Claim(JwtRegisteredClaimNames.Sub,
                 user.Id.ToString()),
             new Claim(ClaimTypes.Role, user.Role)
         };
@@ -72,7 +74,9 @@ public class AuthController : Controller{
     }
 }
 
-public class LoginRequest{
+public class LoginRequest
+{
     public String Username { get; set; }
     public String Password { get; set; }
 }
+

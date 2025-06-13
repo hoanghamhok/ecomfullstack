@@ -13,6 +13,7 @@ type Product = {
   price: number;
   instock: number;
   imageUrl?: string;
+  discount?: number;
   categoryId: number;
   category?: any;
   createdAt?: string;
@@ -37,6 +38,7 @@ export default function ProductPage() {
     price: 0,
     instock: 0,
     imageUrl: '',
+    discount: 0,
     categoryId: 0,
   });
 
@@ -62,6 +64,7 @@ export default function ProductPage() {
       price: product.price,
       instock: product.instock,
       imageUrl: product.imageUrl || '',
+      discount: product.discount || 0,
       categoryId: product.categoryId,
     });
     setModalOpen(true);
@@ -122,6 +125,7 @@ export default function ProductPage() {
               <th className="border p-2">Giá</th>
               <th className="border p-2">Tồn kho</th>
               <th className="border p-2">Danh mục</th>
+              <th className="border p-2">Giảm giá</th>
               <th className="border p-2">Ảnh</th>
               <th className="border p-2">Thao tác</th>
             </tr>
@@ -135,6 +139,7 @@ export default function ProductPage() {
                 <td className="border p-2">{p.price.toLocaleString()}</td>
                 <td className="border p-2">{p.instock}</td>
                 <td className="border p-2">{p.category?.name}</td>
+                <td className="border p-2">{p.discount}</td>
                 <td className="border p-2">
                   {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover" />}
                 </td>
@@ -193,6 +198,16 @@ export default function ProductPage() {
             min={0}
             className="w-full border p-2"
             required
+          />
+          <input
+            type="number"
+            name="discount"
+            value={form.discount}
+            onChange={handleChange}
+            placeholder="Giảm giá (%)"
+            min={0}
+            max={100}
+            className="w-full border p-2"
           />
           <input
             type="file"

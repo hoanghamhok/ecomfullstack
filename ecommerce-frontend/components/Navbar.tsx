@@ -22,6 +22,7 @@ import { useRouter } from 'next/navigation';
 export default function Navbar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
+  const [id, setUserId] = useState<string | null>(null);
   const [searchQuery, setSearchQuery] = useState('');
   const [cartCount, setCartCount] = useState(3);
   const [notifications, setNotifications] = useState(2);
@@ -30,6 +31,7 @@ export default function Navbar() {
   const router = useRouter();
 
   const toggleMenu = () => setMobileOpen(!mobileOpen);
+  const userId = typeof window !== 'undefined' ? localStorage.getItem('id') : null;
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -39,6 +41,12 @@ export default function Navbar() {
         setUsername(user.username || user.fullName || "user");
       } catch {
         setUsername(null);
+      }
+      const userId = localStorage.getItem("id");
+      if (userId) {
+        setUserId(userId);
+      } else {
+        setUserId(null);
       }
     }
 
@@ -208,14 +216,14 @@ export default function Navbar() {
                       </div>
                       <div className="py-2">
                         <Link
-                          href="/profile"
+                          href={userId ? `/profile/${userId}` : "#"}
                           className="flex items-center space-x-3 px-4 py-2 hover:bg-slate-50 transition-colors duration-200"
                         >
                           <User className="w-4 h-4 text-slate-600" />
                           <span className="text-sm text-slate-700">Tài khoản của tôi</span>
                         </Link>
                         <Link
-                          href="/orders"
+                          href="/cart"
                           className="flex items-center space-x-3 px-4 py-2 hover:bg-slate-50 transition-colors duration-200"
                         >
                           <ShoppingCart className="w-4 h-4 text-slate-600" />
@@ -289,13 +297,13 @@ export default function Navbar() {
                 <span>Sản phẩm</span>
                 <div className="absolute bottom-0 left-0 w-0 h-0.5 bg-gradient-to-r from-emerald-500 to-blue-500 group-hover:w-full transition-all duration-300"></div>
               </Link>
-              <div className="relative group">
+              {/* <div className="relative group">
                 <button className="flex items-center space-x-2 px-3 py-2 text-slate-700 hover:text-emerald-500 font-medium transition-colors duration-200">
                   <span>Danh mục</span>
                   <ChevronDown className="w-4 h-4" />
                 </button>
                 {/* CategoryDropdown can be added here */}
-              </div>
+              {/* </div> */}
               <Link
                 href="/deals"
                 className="flex items-center space-x-2 px-3 py-2 text-slate-700 hover:text-emerald-500 font-medium transition-colors duration-200 relative group"

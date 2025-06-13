@@ -3,6 +3,10 @@
 import React, { useEffect, useState } from 'react';
 import Link from 'next/link';
 import { addToCart, fetchProducts } from './services/api';
+import PromoBanner from '@/components/PromoBanner';
+import BrandSlider from '@/components/BrandSlider';
+import BlogPreview from '@/components/BlogPreview';
+import FAQSection from '@/components/FAQ';
 
 export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
@@ -24,18 +28,7 @@ export default function Home() {
 
   return (
     <div>
-      {/* Hero Banner */}
-      <section className="bg-gradient-to-r from-pink-500 via-red-500 to-yellow-500 py-20 text-center text-white">
-        <h1 className="text-5xl font-extrabold drop-shadow-xl mb-4 animate-fade-in-up"><span className="text-white">GoCart</span></h1>
-        <p className="text-xl md:text-2xl max-w-2xl mx-auto mb-6 animate-fade-in">Khám phá sản phẩm công nghệ, thời trang, gia dụng với ưu đãi hấp dẫn.</p>
-        <a
-          href="#products"
-          className="inline-block bg-white text-red-600 font-semibold px-6 py-3 rounded-full shadow hover:scale-105 transition-transform"
-        >
-          Khám phá ngay
-        </a>
-      </section>
-
+      <PromoBanner/>
       {/* Highlights */}
       <section className="max-w-7xl mx-auto my-16 px-4 grid grid-cols-1 md:grid-cols-3 gap-8">
         {[
@@ -50,7 +43,7 @@ export default function Home() {
           </div>
         ))}
       </section>
-
+      <BrandSlider />
       {/* Product Section */}
       <section id="products" className="bg-gray-100 py-16">
         <div className="max-w-7xl mx-auto px-4">
@@ -89,7 +82,8 @@ export default function Home() {
           </div>
         </div>
       </section>
-
+      <BlogPreview />
+      <FAQSection />
       {/* Footer
       <footer className="bg-gray-900 text-gray-300 text-center py-6 mt-16">
         <div className="text-sm">&copy; {new Date().getFullYear()} GoCart. Mọi quyền được bảo lưu.</div>
