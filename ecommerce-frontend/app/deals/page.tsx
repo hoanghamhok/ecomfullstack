@@ -2,6 +2,7 @@
 
 import { useEffect, useState } from 'react';
 import Link from 'next/link';
+import { Zap, ArrowRight } from 'lucide-react';
 import AddToCartButton from '@/components/AddToCartButton';
 
 type Product = {
@@ -21,7 +22,6 @@ export default function DealsPage() {
       try {
         const res = await fetch('http://localhost:5091/api/products');
         const data: Product[] = await res.json();
-
         const discounted = data.filter(p => p.discount && p.discount > 0);
         setProducts(discounted);
       } catch (error) {
@@ -30,71 +30,102 @@ export default function DealsPage() {
         setLoading(false);
       }
     };
-
     fetchDeals();
   }, []);
 
   if (loading) {
-    return <p className="p-4 text-gray-600">Đang tải sản phẩm giảm giá...</p>;
+    return (
+      <div className="min-h-[50vh] flex items-center justify-center">
+        <div className="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-red-500"></div>
+      </div>
+    );
   }
 
   return (
-    <div className="max-w-7xl mx-auto px-4 py-8">
-      <h1 className="text-3xl font-bold mb-6 text-red-600">🔥 Ưu đãi hot hôm nay</h1>
-
-      {products.length === 0 ? (
-        <p className="text-gray-500">Không có sản phẩm giảm giá nào.</p>
-      ) : (
-        <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-6">
-          {products.map(product => {
-            const priceAfterDiscount = Math.round(
-              product.price * (1 - (product.discount || 0) / 100)
-            );
-
-            return (
-              <div
-                key={product.id}
-                className="border p-4 rounded-2xl shadow-sm hover:shadow-lg bg-white relative"
-              >
-                {/* Discount Badge */}
-                <span className="absolute top-2 left-2 bg-red-500 text-white px-2 py-1 text-xs rounded-full shadow">
-                  -{product.discount}%
-                </span>
-
-                {/* Image */}
-                <img
-                  src={product.imageUrl || '/default-image.png'}
-                  alt={product.name}
-                  className="w-full h-48 object-cover rounded-lg mb-3"
-                  onError={(e) => (e.currentTarget.src = '/default-image.png')}
-                />
-
-                {/* Product Name */}
-                <h2 className="text-base font-semibold line-clamp-2 mb-1">{product.name}</h2>
-
-                {/* Pricing */}
-                <p className="text-red-600 font-bold text-lg">
-                  {priceAfterDiscount.toLocaleString()}₫
-                  <span className="line-through text-sm text-gray-400 ml-2">
-                    {product.price.toLocaleString()}₫
-                  </span>
-                </p>
-
-                {/* View and Add to Cart */}
-                <div className="mt-3 flex flex-col gap-2">
-                  <Link
-                    href={`/shop/product/${product.id}`}
-                    className="text-sm text-center bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
-                  >
-                    Xem chi tiết
-                  </Link>
-                  <AddToCartButton productId={product.id} />
-                </div>
-              </div>
-            );
-          })}
+    <div className="min-h-screen bg-gradient-to-br from-red-50 to-orange-50 py-10">
+      <div className="max-w-7xl mx-auto px-4">
+        {/* Header */}
+        <div className="text-center mb-12">
+          <div className="inline-flex items-center bg-red-100 text-red-600 px-6 py-2 rounded-full mb-4">
+            <Zap className="w-5 h-5 mr-2 animate-pulse" />
+            <span className="font-semibold">FLASH SALE</span>
+          </div>
+          <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-3">
+            Ưu đãi <span className="text-red-600">hot hôm nay</span>
+          </h1>
+          <p className="text-lg text-slate-600">Săn deal cực sốc - Số lượng có hạn!</p>
         </div>
-      )}
+
+        {products.length === 0 ? (
+          <div className="text-center py-24">
+            <div className="w-32 h-32 mx-auto mb-6 bg-red-100 rounded-full flex items-center justify-center">
+              <Zap className="w-16 h-16 text-red-400" />
+            </div>
+            <h2 className="text-2xl font-bold text-slate-900 mb-2">Hiện chưa có ưu đãi</h2>
+            <p className="text-slate-600 mb-6">Hãy quay lại sau để khám phá các deal hot!</p>
+            <Link
+              href="/shop"
+              className="inline-flex items-center bg-gradient-to-r from-red-500 to-orange-400 text-white px-8 py-3 rounded-xl font-semibold hover:from-red-600 hover:to-orange-500 transition-all duration-200"
+            >
+              Xem tất cả sản phẩm
+            </Link>
+          </div>
+        ) : (
+          <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-8">
+            {products.map(product => {
+              const priceAfterDiscount = Math.round(
+                product.price * (1 - (product.discount || 0) / 100)
+              );
+              return (
+                <div
+                  key={product.id}
+                  className="group bg-white rounded-2xl shadow-lg hover:shadow-2xl transition-all duration-300 border border-red-100 relative overflow-hidden flex flex-col"
+                >
+                  {/* Discount Ribbon */}
+                  <div className="absolute top-0 right-0 bg-red-500 text-white px-4 py-2 rotate-45 translate-x-8 -translate-y-2 text-xs font-bold shadow-lg z-10">
+                    -{product.discount}%
+                  </div>
+
+                  {/* Image */}
+                  <div className="relative overflow-hidden">
+                    <img
+                      src={product.imageUrl || '/default-image.png'}
+                      alt={product.name}
+                      className="w-full h-56 object-cover transition-transform duration-500 group-hover:scale-110"
+                      onError={(e) => (e.currentTarget.src = '/default-image.png')}
+                    />
+                  </div>
+
+                  {/* Info */}
+                  <div className="flex-1 flex flex-col p-5">
+                    <h2 className="text-lg font-bold text-slate-900 mb-2 line-clamp-2 group-hover:text-red-600 transition-colors">
+                      {product.name}
+                    </h2>
+                    <div className="flex items-baseline gap-3 mb-3">
+                      <span className="text-2xl font-black text-red-600">
+                        {priceAfterDiscount.toLocaleString()}₫
+                      </span>
+                      <span className="line-through text-slate-400">
+                        {product.price.toLocaleString()}₫
+                      </span>
+                    </div>
+                    <div className="mt-auto space-y-2">
+                      <Link
+                        href={`/shop/product/${product.id}`}
+                        className="inline-flex items-center justify-center w-full bg-gradient-to-r from-red-500 to-orange-400 text-white py-2 rounded-xl font-semibold hover:from-red-600 hover:to-orange-500 hover:scale-105 transition-all duration-200 group"
+                      >
+                        Xem chi tiết
+                        <ArrowRight className="w-4 h-4 ml-2 group-hover:translate-x-1 transition-transform" />
+                      </Link>
+                      <AddToCartButton productId={product.id} />
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+        )}
+      </div>
     </div>
   );
 }

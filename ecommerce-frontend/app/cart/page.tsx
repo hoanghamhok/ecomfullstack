@@ -138,15 +138,7 @@ export default function CartPage() {
                 setCartItems([]);
                 setTotal(0);
                 setTimeout(() => setShowSuccess({ visible: false }), 5000); // Tự động ẩn sau 5s
-            }
-            // Success notification with animation
-            // setCartItems([]);
-            // setTotal(0);
-            // setDiscount(0);
-            
-            // Show success modal or redirect
-            // alert("Thanh toán thành công! Mã đơn hàng: " + data.orderId);
-            
+            }       
         } catch (error: any) {
             alert("Lỗi khi thanh toán: " + error.message);
         } finally {

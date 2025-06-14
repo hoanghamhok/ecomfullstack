@@ -202,7 +202,7 @@ export default function ProductPage() {
           <input
             type="number"
             name="discount"
-            value={form.discount}
+            value={form.discount ?? 0}
             onChange={handleChange}
             placeholder="Giảm giá (%)"
             min={0}
@@ -246,7 +246,7 @@ export default function ProductPage() {
           <button
             type="submit"
             className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
-          >
+          > 
             {editingProduct ? "Cập nhật" : "Thêm mới"}
           </button>
         </form>
