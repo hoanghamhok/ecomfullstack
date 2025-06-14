@@ -4,21 +4,23 @@ using System.ComponentModel.DataAnnotations.Schema;
 
 namespace Models{
     [Table("Orders")]
-    public class Order{
+    public class Order
+    {
         [Key]
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public int OrderId {get; set;}
+        public int OrderId { get; set; }
 
         [Required]
         [ForeignKey("User")]
-        public int UserId {get; set;}
+        public int UserId { get; set; }
 
         [Required]
-        public DateTime OrderDate {get; set;} = DateTime.Now;
-        
-        [Required]
-        public decimal TotalAmount {get; set;}
+        public DateTime OrderDate { get; set; } = DateTime.Now;
 
-        public User? User {get; set;}
+        [Required]
+        public decimal TotalAmount { get; set; }
+
+        public User? User { get; set; }
+        public virtual ICollection<OrderDetail> OrderDetails { get; set; }
     }
 }

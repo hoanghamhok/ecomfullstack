@@ -14,7 +14,7 @@ import {
   Phone,
   Mail,
   Star,
-  Zap
+  Zap,ListOrderedIcon
 } from 'lucide-react';
 import CategoryDropdown from './CategoryDropdown';
 import { useRouter } from 'next/navigation';
@@ -229,6 +229,13 @@ export default function Navbar() {
                           className="flex items-center space-x-3 px-4 py-2 hover:bg-slate-50 transition-colors duration-200"
                         >
                           <ShoppingCart className="w-4 h-4 text-slate-600" />
+                          <span className="text-sm text-slate-700">Giỏ hàng của tôi</span>
+                        </Link>
+                        <Link
+                          href="/orders"
+                          className="flex items-center space-x-3 px-4 py-2 hover:bg-slate-50 transition-colors duration-200"
+                        >
+                          <ListOrderedIcon className="w-4 h-4 text-slate-600" />
                           <span className="text-sm text-slate-700">Đơn hàng của tôi</span>
                         </Link>
                         {isAdmin && (
