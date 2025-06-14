@@ -80,3 +80,20 @@ export const updateCartItem = (productId: number, quantity: number) => {
 }
 
 export default API;
+// Lấy danh sách wishlist
+export const fetchWishlist = () => {
+  return API.get("/wishlist", {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+};
+
+// Xóa sản phẩm khỏi wishlist
+export const removeFromWishlist = (productId: number) => {
+  return API.delete(`/wishlist/remove/${productId}`, {
+    headers: {
+      Authorization: `Bearer ${localStorage.getItem("token")}`,
+    },
+  });
+};
