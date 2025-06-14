@@ -1,11 +1,12 @@
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 using Models;
 
 namespace Controllers
 {
-    [Route("api/Wishlist")]
+    [Route("api/wishlist")]
     [ApiController]
     public class WishlistController : ControllerBase
     {
@@ -16,70 +17,66 @@ namespace Controllers
             _context = context;
         }
 
-        // Thêm sản phẩm vào wishlist
+        // ==================== API ====================
+
         [HttpPost("add")]
         [Authorize]
         public async Task<IActionResult> AddToWishlist([FromBody] WishlistRequest request)
         {
             var userId = GetUserIdFromToken();
             if (userId == null)
-                return Unauthorized("Không tìm thấy người dùng.");
+                return Unauthorized(new { error = "Không tìm thấy người dùng từ token." });
 
             var product = await _context.Products.FindAsync(request.ProductId);
             if (product == null)
                 return NotFound("Không tìm thấy sản phẩm.");
 
-            var existingWishlist = await _context.Wishlists.FirstOrDefaultAsync(
-                w => w.UserId == userId.ToString() && w.ProductId == request.ProductId);
-
-            if (existingWishlist != null)
+            var exists = await _context.Wishlists.AnyAsync(w =>
+                w.UserId == userId && w.ProductId == request.ProductId);
+            if (exists)
                 return BadRequest("Sản phẩm đã có trong danh sách yêu thích.");
 
-            var wishlistItem = new Wishlist
+            _context.Wishlists.Add(new Wishlist
             {
-                UserId = userId.ToString(),
+                UserId = userId,
                 ProductId = request.ProductId,
-                CreatedAt = DateTime.Now // ➜ Dùng để sắp xếp theo thời gian thêm mới nhất
-            };
+                CreatedAt = DateTime.Now
+            });
 
-            _context.Wishlists.Add(wishlistItem);
             await _context.SaveChangesAsync();
-
-            return Ok(new { message = "Thêm sản phẩm vào danh sách yêu thích thành công." });
+            return Ok(new { message = "Thêm vào danh sách yêu thích thành công." });
         }
 
-        // Lấy danh sách sản phẩm yêu thích
         [HttpGet("get")]
         [Authorize]
         public async Task<IActionResult> GetWishlist()
         {
             var userId = GetUserIdFromToken();
             if (userId == null)
-                return Unauthorized("Không tìm thấy người dùng.");
+                return Unauthorized(new { error = "Không tìm thấy người dùng từ token." });
 
-            var wishlistItems = await _context.Wishlists
-                .Where(w => w.UserId == userId.ToString())
+            var wishlist = await _context.Wishlists
+                .Where(w => w.UserId == userId)
                 .Include(w => w.Product)
                 .OrderByDescending(w => w.CreatedAt)
                 .ToListAsync();
 
-            if (!wishlistItems.Any())
+            if (!wishlist.Any())
                 return NotFound("Danh sách yêu thích trống.");
 
-            return Ok(wishlistItems);
+            return Ok(wishlist);
         }
 
-        // Xóa một sản phẩm khỏi wishlist
         [HttpDelete("remove/{productId}")]
         [Authorize]
         public async Task<IActionResult> RemoveFromWishlist(int productId)
         {
             var userId = GetUserIdFromToken();
             if (userId == null)
-                return Unauthorized("Không tìm thấy người dùng.");
+                return Unauthorized(new { error = "Không tìm thấy người dùng từ token." });
 
-            var item = await _context.Wishlists.FirstOrDefaultAsync(
-                w => w.UserId == userId.ToString() && w.ProductId == productId);
+            var item = await _context.Wishlists.FirstOrDefaultAsync(w =>
+                w.UserId == userId && w.ProductId == productId);
 
             if (item == null)
                 return NotFound("Không tìm thấy sản phẩm trong danh sách yêu thích.");
@@ -87,22 +84,18 @@ namespace Controllers
             _context.Wishlists.Remove(item);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Xóa sản phẩm khỏi danh sách yêu thích thành công." });
+            return Ok(new { message = "Đã xóa sản phẩm khỏi danh sách yêu thích." });
         }
 
-        // Xóa toàn bộ wishlist
         [HttpDelete("clear")]
         [Authorize]
         public async Task<IActionResult> ClearWishlist()
         {
             var userId = GetUserIdFromToken();
             if (userId == null)
-                return Unauthorized("Không tìm thấy người dùng.");
+                return Unauthorized(new { error = "Không tìm thấy người dùng từ token." });
 
-            var items = await _context.Wishlists
-                .Where(w => w.UserId == userId.ToString())
-                .ToListAsync();
-
+            var items = await _context.Wishlists.Where(w => w.UserId == userId).ToListAsync();
             if (!items.Any())
                 return NotFound("Danh sách yêu thích đã trống.");
 
@@ -112,33 +105,30 @@ namespace Controllers
             return Ok(new { message = "Đã xóa toàn bộ danh sách yêu thích." });
         }
 
-        // Kiểm tra sản phẩm có nằm trong wishlist không
         [HttpGet("check/{productId}")]
         [Authorize]
         public async Task<IActionResult> CheckInWishlist(int productId)
         {
             var userId = GetUserIdFromToken();
             if (userId == null)
-                return Unauthorized("Không tìm thấy người dùng.");
+                return Unauthorized(new { error = "Không tìm thấy người dùng từ token." });
 
-            var exists = await _context.Wishlists.AnyAsync(
-                w => w.UserId == userId.ToString() && w.ProductId == productId);
+            var exists = await _context.Wishlists.AnyAsync(w =>
+                w.UserId == userId && w.ProductId == productId);
 
             return Ok(new { inWishlist = exists });
         }
 
-        // Chuyển sản phẩm từ wishlist sang giỏ hàng
         [HttpPost("move-to-cart")]
         [Authorize]
         public async Task<IActionResult> MoveToCart([FromBody] MoveToCartRequest request)
         {
             var userId = GetUserIdFromToken();
             if (userId == null)
-                return Unauthorized("Không tìm thấy người dùng.");
+                return Unauthorized(new { error = "Không tìm thấy người dùng từ token." });
 
-            var wishlistItem = await _context.Wishlists.FirstOrDefaultAsync(
-                w => w.UserId == userId.ToString() && w.ProductId == request.ProductId);
-
+            var wishlistItem = await _context.Wishlists.FirstOrDefaultAsync(w =>
+                w.UserId == userId && w.ProductId == request.ProductId);
             if (wishlistItem == null)
                 return NotFound("Không tìm thấy sản phẩm trong danh sách yêu thích.");
 
@@ -146,8 +136,8 @@ namespace Controllers
             if (product == null)
                 return NotFound("Không tìm thấy sản phẩm.");
 
-            var existingCart = await _context.Carts.FirstOrDefaultAsync(
-                c => c.UserId == userId && c.ProductId == request.ProductId);
+            var existingCart = await _context.Carts.FirstOrDefaultAsync(c =>
+                c.UserId == int.Parse(userId) && c.ProductId == request.ProductId);
 
             if (existingCart != null)
             {
@@ -156,32 +146,30 @@ namespace Controllers
             }
             else
             {
-                var cartItem = new Cart
+                _context.Carts.Add(new Cart
                 {
-                    UserId = (int)userId,
+                    UserId = int.Parse(userId),
                     ProductId = request.ProductId,
                     Quantity = request.Quantity,
                     CreatedAt = DateTime.Now
-                };
-                _context.Carts.Add(cartItem);
+                });
             }
 
             _context.Wishlists.Remove(wishlistItem);
             await _context.SaveChangesAsync();
 
-            return Ok(new { message = "Chuyển sản phẩm vào giỏ hàng thành công." });
+            return Ok(new { message = "Chuyển vào giỏ hàng thành công." });
         }
 
-        // Lấy ID người dùng từ Token (JWT)
-        private int? GetUserIdFromToken()
+        // ==================== HÀM HỖ TRỢ ====================
+
+        private string? GetUserIdFromToken()
         {
-            var userIdClaim = User.Claims.FirstOrDefault(c =>
-                c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
-
-            return userIdClaim != null ? int.Parse(userIdClaim.Value) : (int?)null;
+            var claim = User.FindFirst(ClaimTypes.NameIdentifier);
+            return claim?.Value;
         }
 
-        // ==================== CLASS DỮ LIỆU ====================
+        // ==================== DTO ====================
 
         public class WishlistRequest
         {

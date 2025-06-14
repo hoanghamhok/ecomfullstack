@@ -21,7 +21,7 @@ type WishlistItem = {
   product: Product;
 };
 
-export default function WishlistPage() {
+export default function Page() {
   const [wishlist, setWishlist] = useState<WishlistItem[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);

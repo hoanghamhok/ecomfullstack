@@ -26,6 +26,7 @@ export default function Navbar() {
   const [searchQuery, setSearchQuery] = useState('');
   const [cartCount, setCartCount] = useState(3);
   const [notifications, setNotifications] = useState(2);
+  const [wishlistCount, setWishlistCount] = useState(0); // Thay đổi từ hard-coded 2 thành 0
   const [scrolled, setScrolled] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const router = useRouter();
@@ -33,6 +34,14 @@ export default function Navbar() {
 
   const toggleMenu = () => setMobileOpen(!mobileOpen);
   const userId = typeof window !== 'undefined' ? localStorage.getItem('id') : null;
+
+  // Function to load wishlist count from localStorage
+  const loadWishlistCount = () => {
+    if (typeof window !== 'undefined') {
+      const wishlist = JSON.parse(localStorage.getItem('wishlist') || '[]');
+      setWishlistCount(wishlist.length);
+    }
+  };
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");
@@ -52,12 +61,28 @@ export default function Navbar() {
         setUserId(null);
       }
     }
-  // Handle scroll effect
-  const handleScroll = () => {
+
+    // Load wishlist count
+    loadWishlistCount();
+
+    // Handle scroll effect
+    const handleScroll = () => {
       setScrolled(window.scrollY > 10);
     };
+
+    // Listen for wishlist updates
+    const handleWishlistUpdate = (event: CustomEvent) => {
+      setWishlistCount(event.detail.count);
+    };
+
     window.addEventListener('scroll', handleScroll);
-    return () => window.removeEventListener('scroll', handleScroll);
+    window.addEventListener('wishlistUpdated', handleWishlistUpdate as EventListener);
+
+    // Cleanup
+    return () => {
+      window.removeEventListener('scroll', handleScroll);
+      window.removeEventListener('wishlistUpdated', handleWishlistUpdate as EventListener);
+    };
   }, []);
 
   const handleLogout = () => {
@@ -68,7 +93,7 @@ export default function Navbar() {
     router.push("/");
   };
 
-    const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
+  const handleSearch = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
     if (searchQuery.trim()) {
       router.push(`/shop?search=${encodeURIComponent(searchQuery.trim())}`);
@@ -153,15 +178,17 @@ export default function Navbar() {
             <div className="hidden md:flex items-center space-x-6">
               {/* Action Buttons */}
               <div className="flex items-center space-x-2">
-                {/* Wishlist */}
+                {/* Wishlist - Updated */}
                 <Link
                   href="/wishlist"
                   className="relative p-3 hover:bg-slate-100 rounded-xl transition-colors duration-200 group"
                 >
                   <Heart className="w-5 h-5 text-slate-600 group-hover:text-red-500" />
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    2
-                  </span>
+                  {wishlistCount > 0 && (
+                    <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                      {wishlistCount}
+                    </span>
+                  )}
                 </Link>
 
                 {/* Notifications */}

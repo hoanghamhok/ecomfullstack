@@ -1,141 +1,73 @@
-'use client'
-import { useState, useEffect } from 'react'
-import axios from 'axios'
+'use client';
+
+import { useState } from 'react';
+import { Heart } from 'lucide-react';
 
 interface WishlistButtonProps {
-  productId: number
-  userId?: string // Optional nếu bạn dùng token để xác định user
+  productId: string;
 }
 
-// Kiểu dữ liệu trả về từ API check wishlist
-interface WishlistCheckResponse {
-  inWishlist: boolean;
-}
+export default function WishlistButton({ productId }: WishlistButtonProps) {
+  const [isLoading, setIsLoading] = useState(false);
+  const [isInWishlist, setIsInWishlist] = useState(false);
 
-export default function WishlistButton({ productId, userId }: WishlistButtonProps) {
-  const [isInWishlist, setIsInWishlist] = useState(false)
-  const [loading, setLoading] = useState(false)
-  const [error, setError] = useState<string | null>(null)
-
-  // Kiểm tra khi component mount hoặc productId thay đổi
-  useEffect(() => {
-    checkInWishlist()
-  }, [productId])
-
-  const checkInWishlist = async () => {
-    try {
-      const token = localStorage.getItem('token')
-      const response = await axios.get<WishlistCheckResponse>(
-        `http://localhost:5000/api/Wishlist/check/${productId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-      })
-      setIsInWishlist(response.data.inWishlist)
-    } catch (error) {
-      console.error('Lỗi khi kiểm tra wishlist:', error)
+  const handleWishlistToggle = async () => {
+    if (!productId) {
+      console.error('Product ID is required');
+      return;
     }
-  }
 
-  const handleToggleWishlist = async () => {
-    setLoading(true)
-    setError(null)
+    setIsLoading(true);
 
     try {
-      const token = localStorage.getItem('token')
-      if (!token) {
-        setError('Vui lòng đăng nhập để sử dụng tính năng này')
-        setLoading(false)
-        return
-      }
+      const res = await fetch('/api/Wishlist/add', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ productId }),
+      });
 
-      if (isInWishlist) {
-        // Xóa khỏi wishlist
-        await axios.delete(`http://localhost:5000/api/Wishlist/remove/${productId}`, {
-          headers: {
-            'Authorization': `Bearer ${token}`
-          }
-        })
-        setIsInWishlist(false)
-      } else {
-        // Thêm vào wishlist
-        await axios.post('http://localhost:5000/api/Wishlist/add', {
-          productId
-        }, {
-          headers: {
-            'Authorization': `Bearer ${token}`,
-            'Content-Type': 'application/json'
-          }
-        })
-        setIsInWishlist(true)
-      }
-    } catch (error: any) {
-      console.error('Lỗi wishlist:', error)
+      const responseData = await res.json().catch(() => null);
 
-      if (error.response?.status === 401) {
-        setError('Vui lòng đăng nhập để sử dụng tính năng này')
-      } else if (error.response?.status === 400) {
-        setError('Sản phẩm đã có trong danh sách yêu thích')
+      if (res.ok) {
+        setIsInWishlist(prev => !prev);
+        console.log(isInWishlist ? 'Đã xóa khỏi wishlist!' : 'Đã thêm vào wishlist!');
+      } else if (res.status === 401) {
+        alert('Vui lòng đăng nhập để sử dụng wishlist');
+      } else if (res.status === 500) {
+        console.error('Lỗi server:', responseData);
+        alert('Lỗi máy chủ, vui lòng thử lại sau.');
       } else {
-        setError('Có lỗi xảy ra, vui lòng thử lại')
+        console.error('Lỗi khác:', res.status, responseData);
+        alert(responseData?.message || 'Đã xảy ra lỗi.');
       }
+    } catch (err) {
+      console.error('Lỗi kết nối:', err);
+      alert('Không thể kết nối đến máy chủ.');
     } finally {
-      setLoading(false)
+      setIsLoading(false);
     }
-  }
+  };
 
   return (
-    <div className="wishlist-button-container">
-      <button 
-        onClick={handleToggleWishlist} 
-        disabled={loading}
-        className={`wishlist-btn ${isInWishlist ? 'in-wishlist' : 'not-in-wishlist'} ${loading ? 'loading' : ''}`}
-      >
-        {loading ? (
-          'Đang xử lý...'
-        ) : isInWishlist ? (
-          '❤️ Đã yêu thích'
-        ) : (
-          '🤍 Thêm vào wishlist'
-        )}
-      </button>
-
-      {error && (
-        <div className="error-message" style={{ color: 'red', fontSize: '12px', marginTop: '4px' }}>
-          {error}
-        </div>
-      )}
-
-      <style jsx>{`
-        .wishlist-btn {
-          padding: 8px 16px;
-          border: 1px solid #ddd;
-          border-radius: 4px;
-          cursor: pointer;
-          transition: all 0.2s ease;
-          background: white;
+    <button
+      onClick={handleWishlistToggle}
+      disabled={isLoading}
+      className={`flex items-center gap-2 px-4 py-2 rounded-lg transition-all duration-200
+        ${isLoading
+          ? 'bg-gray-300 cursor-not-allowed'
+          : isInWishlist
+          ? 'bg-red-100 text-red-600 hover:bg-red-200'
+          : 'bg-gray-100 text-gray-600 hover:bg-gray-200'
         }
-
-        .wishlist-btn:hover:not(:disabled) {
-          background: #f5f5f5;
-        }
-
-        .wishlist-btn.in-wishlist {
-          background: #ffe6e6;
-          border-color: #ff4757;
-          color: #ff4757;
-        }
-
-        .wishlist-btn.loading {
-          opacity: 0.6;
-          cursor: not-allowed;
-        }
-
-        .wishlist-btn:disabled {
-          cursor: not-allowed;
-          opacity: 0.6;
-        }
-      `}</style>
-    </div>
-  )
+      `}
+    >
+      <Heart
+        size={20}
+        className={isInWishlist ? 'fill-current text-red-500' : 'text-gray-500'}
+      />
+      {isLoading ? 'Đang xử lý...' : isInWishlist ? 'Đã yêu thích' : 'Yêu thích'}
+    </button>
+  );
 }
