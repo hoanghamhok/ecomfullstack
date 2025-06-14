@@ -125,9 +125,9 @@ export default function OrderDetailPage() {
                 Tóm tắt đơn hàng
               </h3>
               <div className="space-y-2">
-                <p><span className="font-medium">Phương thức thanh toán:</span> {order.paymentMethod}</p>
-                <p><span className="font-medium">Vận chuyển:</span> {order.shippingMethod}</p>
-                <p><span className="font-medium">Địa chỉ giao hàng:</span> {order.shippingAddress}</p>
+                <p><span className="font-medium">Phương thức thanh toán:</span> COD</p>
+                <p><span className="font-medium">Vận chuyển:</span> Giao Hàng Nhanh</p>
+                {/* <p><span className="font-medium">Địa chỉ giao hàng:</span> {order.shippingAddress}</p> */}
               </div>
             </div>
           </div>
@@ -178,8 +178,8 @@ export default function OrderDetailPage() {
               Thanh toán
             </h3>
             <div className="space-y-2">
-              <p>Phương thức: {order.paymentMethod}</p>
-              <p>Trạng thái: {order.paymentStatus}</p>
+              <p>Phương thức: Thanh toán khi nhận hàng</p>
+              <p>Trạng thái: Đang đợi...</p>
               <p>Ngày thanh toán: {new Date(order.paymentDate).toLocaleDateString()}</p>
             </div>
           </div>
@@ -190,9 +190,9 @@ export default function OrderDetailPage() {
               Vận chuyển
             </h3>
             <div className="space-y-2">
-              <p>Đơn vị: {order.shippingCompany}</p>
-              <p>Trạng thái: {order.shippingStatus}</p>
-              <p>Dự kiến giao: {new Date(order.estimatedDelivery).toLocaleDateString()}</p>
+              <p>Đơn vị: Giao Hàng Nhanh</p>
+              <p>Trạng thái: Đang vận chuyển</p>
+              <p>Dự kiến giao: ~3 ngày sau khi đặt hàng thành công</p>
             </div>
           </div>
         </div>

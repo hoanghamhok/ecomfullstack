@@ -71,6 +71,7 @@ namespace Controllers
                 Price = request.Price,
                 Instock = request.Instock,
                 ImageUrl = request.ImageUrl,
+                Discount = request.Discount,
                 CategoryId = request.CategoryId,
                 CreatedAt = DateTime.UtcNow
             };
@@ -101,6 +102,7 @@ namespace Controllers
             product.Price = request.Price;
             product.Instock = request.Instock;
             product.ImageUrl = request.ImageUrl;
+            product.Discount = request.Discount;
             product.CategoryId = request.CategoryId;
             // product.CreatedAt giữ nguyên
 

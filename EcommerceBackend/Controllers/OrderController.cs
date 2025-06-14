@@ -53,7 +53,7 @@ namespace Controllers
             if (userId == null)
                 return Unauthorized("Không tìm thấy người dùng.");
 
-            var order = await _context.Orders
+            var order = await _context.Orders.Include(o=>o.OrderDetails).ThenInclude(od=>od.Product).Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == userId);
 
             if (order == null)
@@ -69,6 +69,9 @@ namespace Controllers
                 order.OrderId,
                 order.OrderDate,
                 order.TotalAmount,
+                CustomerName = order.User.FullName,      // Giả sử User có FullName
+                CustomerEmail = order.User.Email,
+                PhoneNumber = order.User.Phone,
                 Items = details.Select(d => new
                 {
                     d.ProductId,

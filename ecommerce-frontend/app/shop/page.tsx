@@ -305,7 +305,7 @@ export default function ShopPage() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
                 {/* Category Filter */}
-                <div>
+                {/* <div>
                   <h4 className="font-medium text-slate-900 mb-3">Danh mục</h4>
                   <div className="space-y-2">
                     {categories.map(category => (
@@ -326,7 +326,7 @@ export default function ShopPage() {
                       </label>
                     ))}
                   </div>
-                </div>
+                </div> */}
 
                 {/* Price Range Filter */}
                 <div>
@@ -471,7 +471,7 @@ export default function ShopPage() {
                     }`}>
                       {product.name}
                     </h3>
-
+                    <div className="text-blue-600 font-bold text-xl mb-2">{Number(product.price).toLocaleString()} ₫</div>
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
                         {/* {product.discount && product.discount > 0 ? (
