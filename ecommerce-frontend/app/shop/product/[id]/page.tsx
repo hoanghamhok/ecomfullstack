@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
+import WishlistButton from '@/components/WishlistButton';
 
 interface Props {
   params: {
@@ -48,6 +49,7 @@ export default async function ProductDetailPage({ params }: Props) {
           <div className="text-2xl font-semibold text-red-600">
             {product.price.toLocaleString()} ₫
           </div>
+            <WishlistButton productId={product.id} />
           <p className="text-sm text-gray-500">Tình trạng: {product.instock > 0 ? 'Còn hàng' : 'Hết hàng'}</p>
           <AddToCartButton productId={product.id} />
         </div>
