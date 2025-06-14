@@ -1,7 +1,10 @@
 import React from 'react'
 import Sidebar from '@/components/Sidebar'
 import Navbar from '@/components/Navbar'
-
+import { cookies } from "next/headers";
+import { redirect } from "next/navigation";
+import { jwtDecode } from "jwt-decode";
+// Kiểm tra quyền truy cập của người dùng
 export default function AdminLayout( 
     {children} : {children : React.ReactNode}){
         return (
