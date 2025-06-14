@@ -24,7 +24,7 @@ export default function LoginPage() {
       localStorage.setItem("token", data.token);
       localStorage.setItem("user", JSON.stringify(data.user));
       
-      router.push("/");
+      window.location.href = "/";
     } catch (error: any) {
       setErrorMessage(error.response?.data || "Đã xảy ra lỗi khi đăng nhập");
     } finally {

@@ -31,7 +31,7 @@ namespace Models{
         public string Email {get; set;} 
 
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
-        public DateTime CreatAt {get; set;} = DateTime.UtcNow;
+        public DateTime? CreatAt {get; set;} = DateTime.UtcNow;
 
         public bool IsActive {get; set;} = true;
 

@@ -29,6 +29,7 @@ export default function Navbar() {
   const [scrolled, setScrolled] = useState(false);
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const router = useRouter();
+  const [isAdmin, setIsAdmin] = useState(false);
 
   const toggleMenu = () => setMobileOpen(!mobileOpen);
   const userId = typeof window !== 'undefined' ? localStorage.getItem('id') : null;
@@ -39,8 +40,10 @@ export default function Navbar() {
       try {
         const user = JSON.parse(userJson);
         setUsername(user.username || user.fullName || "user");
+        setIsAdmin(user.role?.toLowerCase() === "admin");
       } catch {
         setUsername(null);
+        setIsAdmin(false);
       }
       const userId = localStorage.getItem("id");
       if (userId) {
@@ -49,7 +52,6 @@ export default function Navbar() {
         setUserId(null);
       }
     }
-
   // Handle scroll effect
   const handleScroll = () => {
       setScrolled(window.scrollY > 10);
@@ -229,13 +231,14 @@ export default function Navbar() {
                           <ShoppingCart className="w-4 h-4 text-slate-600" />
                           <span className="text-sm text-slate-700">Đơn hàng của tôi</span>
                         </Link>
+                        {isAdmin && (
                         <Link
                           href="/admin"
                           className="flex items-center space-x-3 px-4 py-2 hover:bg-slate-50 transition-colors duration-200"
                         >
                           <User className="w-4 h-4 text-slate-600" />
                           <span className="text-sm text-slate-700">Quản trị</span>
-                        </Link>
+                        </Link>)}
                       </div>
                       <div className="border-t border-slate-100 pt-2">
                         <button
