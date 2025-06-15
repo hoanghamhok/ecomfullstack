@@ -1,64 +1,87 @@
 'use client';
+
 import { useState } from 'react';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import {
   faChartPie,
   faBox,
-  faShoppingCart,
   faFileInvoice,
   faUsers,
   faStar,
-  faFolder
+  faFolder,
+  faUser
 } from '@fortawesome/free-solid-svg-icons';
 
-export default function Sidebar() {
-  const [openMenu, setOpenMenu] = useState<string | null>(null);
-  const toggleMenu = (menu: string) => {
-    setOpenMenu(prev => (prev === menu ? null : menu));
-  };
+export default function AdminSidebar() {
+  const [activeItem, setActiveItem] = useState('Dashboard');
+
+  const mainItems = [
+    { name: 'Dashboard', icon: faChartPie, color: 'text-blue-500', href: '/admin' },
+    { name: 'Nhóm sản phẩm', icon: faFolder, color: 'text-indigo-500', href: '/admin/categories' },
+    { name: 'Sản phẩm', icon: faBox, color: 'text-red-500', href: '/admin/products' },
+    { name: 'Đơn hàng', icon: faFileInvoice, color: 'text-green-500', href: '/admin/orders' },
+    { name: 'Người dùng', icon: faUsers, color: 'text-pink-500', href: '/admin/users' },
+    { name: 'Khuyến mãi', icon: faStar, color: 'text-yellow-500', href: '/admin/discount' },
+  ];
+
+  const accountItems = [
+    { name: 'Profile', icon: faUser, color: 'text-gray-600', href: '#' },
+  ];
 
   return (
-    <aside className="fixed top-16 left-0 w-60 h-[calc(100vh-4rem)] bg-white shadow text-gray-800 px-3 py-4 z-40">
-      <ul className="mt-0 ml-6 space-y-10 text-lg font-medium">
-        <li>
-          <a href="/admin" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100">
-            <FontAwesomeIcon icon={faChartPie} />
-            <span>Dashboard</span>
-          </a>
-        </li>
+    <aside className="fixed top-20 left-0 w-64 h-screen bg-white shadow-xl rounded-tr-3xl rounded-br-3xl px-6 py-8 z-50 transition-all duration-500 ease-in-out animate-fade-in">
+      
 
-        <li>
-          <a href="/admin/categories" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100">
-            <FontAwesomeIcon icon={faFolder} />
-            <span>Nhóm sản phẩm</span>
-          </a>
-        </li>
+      {/* Menu Items */}
+      <ul className="space-y-2 text-sm font-medium text-gray-700">
+        {mainItems.map((item) => (
+          <li key={item.name}>
+            <a
+              href={item.href}
+              onClick={() => setActiveItem(item.name)}
+              className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-in-out
+                ${
+                  activeItem === item.name
+                    ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 font-semibold shadow-md border-l-4 border-blue-500'
+                    : 'hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow hover:scale-[1.02]'
+                }`}
+            >
+              <FontAwesomeIcon
+                icon={item.icon}
+                className={`w-4 h-4 ${item.color} transition-transform duration-300 group-hover:animate-bounce`}
+              />
+              <span className="transition-transform group-hover:translate-x-1">{item.name}</span>
+            </a>
+          </li>
+        ))}
+      </ul>
 
-        <li>
-          <a href="/admin/products" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100">
-            <FontAwesomeIcon icon={faBox} />
-            <span>Sản phẩm</span>
-          </a>
-        </li>
-        
-        <li>
-          <a href="/admin/orders" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100">
-            <FontAwesomeIcon icon={faFileInvoice} />
-            <span>Đơn hàng</span>
-          </a>
-        </li>
-        <li>
-          <a href="/admin/users" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100">
-            <FontAwesomeIcon icon={faUsers} />
-            <span>Người dùng</span>
-          </a>
-        </li>
-        <li>
-          <a href="#" className="flex items-center gap-3 px-3 py-2 rounded hover:bg-gray-100">
-            <FontAwesomeIcon icon={faStar} />
-            <span>Khuyến Mãi</span>
-          </a>
-        </li>
+      {/* Account Pages */}
+      <div className="mt-8 mb-2 text-xs font-bold text-gray-500 uppercase tracking-widest">
+        Account Pages
+      </div>
+
+      <ul className="space-y-2 text-sm font-medium text-gray-700">
+        {accountItems.map((item) => (
+          <li key={item.name}>
+            <a
+              href={item.href}
+              onClick={() => setActiveItem(item.name)}
+              className={`group flex items-center gap-3 px-4 py-3 rounded-xl transition-all duration-300 ease-in-out
+                ${
+                  activeItem === item.name
+                    ? 'bg-gradient-to-r from-blue-100 to-blue-50 text-blue-700 font-semibold shadow-md border-l-4 border-blue-500'
+                    : 'hover:bg-gradient-to-r hover:from-gray-100 hover:to-gray-50 hover:shadow hover:scale-[1.02]'
+                }`}
+            >
+              <FontAwesomeIcon
+                icon={item.icon}
+                className={`w-4 h-4 ${item.color} group-hover:animate-bounce transition-transform`}
+              />
+              <span className="transition-transform group-hover:translate-x-1">{item.name}</span>
+            </a>
+          </li>
+        ))}
       </ul>
     </aside>
   );

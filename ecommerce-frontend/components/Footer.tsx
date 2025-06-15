@@ -2,7 +2,7 @@
 'use client';
 import Link from "next/link";
 import { useState } from "react";
-
+import { usePathname } from 'next/navigation';
 
 export default function Footer() {
   const [emailSubscription, setEmailSubscription] = useState("");
@@ -16,7 +16,8 @@ export default function Footer() {
       setTimeout(() => setIsSubscribed(false), 3000);
     }
   };
-
+  const pathname = usePathname();
+  if (pathname.startsWith('/admin')) return null;
   return (
     <footer className="relative bg-white text-slate-700 overflow-hidden border-t border-slate-100 shadow-sm">
       {/* Background Pattern */}

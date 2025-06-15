@@ -69,82 +69,93 @@ export default function Category() {
   };
 
   return (
-    <div className="pt-16 ml-60 px-6 py-4 min-h-screen bg-gray-50">
-      <h1 className="text-2xl text-black font-bold mb-4">QUẢN LÝ NHÓM SẢN PHẨM</h1>
+    <div className="pt-24 pl-64 pr-6 pb-6 min-h-screen bg-gray-50">
+      <h1 className="text-3xl font-bold text-gray-800 mb-6">📂 Quản lý nhóm sản phẩm</h1>
 
-      {/* Form thêm, sửa nhóm sản phẩm */}
-      <div className="mb-4">
-        <input
-          type="text"
-          className="border text-black p-2 mr-2"
-          value={name}
-          onChange={(e) => setName(e.target.value)}
-          placeholder="Tên nhóm sản phẩm"
-        />
-        <input
-          type="text"
-          className="border text-black p-2 mr-2"
-          value={description}
-          onChange={(e) => setDescription(e.target.value)}
-          placeholder="Mô tả nhóm sản phẩm"
-        
-        />
-        {isEditing ? (
-          <button
-            onClick={handleUpdateCategory}
-            className="bg-yellow-500 text-white px-4 py-2"
-          >
-            Cập nhật
-          </button>
-        ) : (
-          <button
-            type='button'
-            onClick={handleCreateCategory}
-            className="bg-yellow-500 text-white px-4 py-2"
-          >
-            Thêm nhóm sản phẩm
-          </button>
-        )}
+      {/* Form */}
+      <div className="bg-white p-6 rounded-xl shadow-md mb-8">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">
+          {isEditing ? '✏️ Cập nhật nhóm sản phẩm' : '➕ Thêm nhóm sản phẩm'}
+        </h2>
+        <div className="flex flex-col md:flex-row gap-4">
+          <input
+            type="text"
+            className="border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-yellow-400 w-full"
+            value={name}
+            onChange={(e) => setName(e.target.value)}
+            placeholder="Tên nhóm sản phẩm"
+          />
+          <input
+            type="text"
+            className="border border-gray-300 rounded-md px-4 py-2 focus:ring-2 focus:ring-yellow-400 w-full"
+            value={description}
+            onChange={(e) => setDescription(e.target.value)}
+            placeholder="Mô tả nhóm sản phẩm"
+          />
+          {isEditing ? (
+            <button
+              onClick={handleUpdateCategory}
+              className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
+            >
+              ✅ Cập nhật
+            </button>
+          ) : (
+            <button
+              onClick={handleCreateCategory}
+              className="bg-yellow-500 text-white px-4 py-2 rounded-md hover:bg-yellow-600 transition"
+            >
+              ➕ Thêm
+            </button>
+          )}
+        </div>
       </div>
 
-      {/* Danh sách nhóm sản phẩm */}
-      {/* Danh sách nhóm sản phẩm dạng bảng */}
-<div className="mt-4">
-  <h2 className="font-semibold text-black mb-2">Danh sách nhóm sản phẩm</h2>
-  <table className="w-full text-left border border-gray-300 bg-white">
-    <thead>
-      <tr className="bg-gray-100 text-black text-center">
-        <th className="px-4 py-2 border-r">STT</th>
-        <th className="px-4 py-2 border-r">Tên nhóm sản phẩm</th>
-        <th className="px-4 py-2 border-r">Miêu tả</th>
-        <th className="px-4 py-2">Thao tác</th>
-      </tr>
-    </thead>
-    <tbody>
-      {categories.map((category, index) => (
-        <tr key={category.id} className="border-t text-black">
-          <td className="px-4 py-2 border-r text-center">{index + 1}</td>
-          <td className="px-4 py-2 border-r">{category.name}</td>
-          <td className="px-4 py-2 border-r">{category.description}</td>
-          <td className="text-center align-middle">
-          <div className="flex justify-center items-center gap-4">
-            <button
-              onClick={() => handleEditCategory(category)}
-              className="text-yellow-600 hover:underline"
-            >Sửa
-            </button>
-            <button
-              onClick={() => handleDeleteCategory(category.id)}
-              className="text-red-600 hover:underline"
-            >Xóa
-            </button>
-          </div>
-          </td>
-        </tr>
-      ))}
-    </tbody>
-  </table>
-</div>
+      {/* Table */}
+      <div className="bg-white p-6 rounded-xl shadow-md">
+        <h2 className="text-xl font-semibold text-gray-700 mb-4">📋 Danh sách nhóm sản phẩm</h2>
+        <table className="w-full table-auto border border-gray-300 rounded overflow-hidden">
+          <thead className="bg-gray-100 text-gray-700">
+            <tr className="text-center">
+              <th className="px-4 py-2 border">STT</th>
+              <th className="px-4 py-2 border">Tên nhóm</th>
+              <th className="px-4 py-2 border">Mô tả</th>
+              <th className="px-4 py-2 border">Thao tác</th>
+            </tr>
+          </thead>
+          <tbody>
+            {categories.map((category, index) => (
+              <tr key={category.id} className="text-center text-gray-800 hover:bg-gray-50">
+                <td className="px-4 py-2 border">{index + 1}</td>
+                <td className="px-4 py-2 border">{category.name}</td>
+                <td className="px-4 py-2 border">{category.description}</td>
+                <td className="px-4 py-2 border">
+                  <div className="flex justify-center gap-3">
+                    <button
+                      onClick={() => handleEditCategory(category)}
+                      className="text-blue-600 hover:underline"
+                    >
+                      Sửa
+                    </button>
+                    <button
+                      onClick={() => handleDeleteCategory(category.id)}
+                      className="text-red-600 hover:underline"
+                    >
+                      Xóa
+                    </button>
+                  </div>
+                </td>
+              </tr>
+            ))}
+            {categories.length === 0 && (
+              <tr>
+                <td colSpan={4} className="text-center py-4 text-gray-500">
+                  Không có nhóm sản phẩm nào.
+                </td>
+              </tr>
+            )}
+          </tbody>
+        </table>
+      </div>
     </div>
   );
 }

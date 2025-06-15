@@ -9,12 +9,12 @@ export const fetchCategories = () => API.get('/categories');
 
 //API tạo mới nhóm sản phẩm
 export const createCategory = (
-  data: {name: String, description: String}) => API.post(
+  data: {name: string, description: string}) => API.post(
     '/categories', data);
 
 //API sửa nhóm sản phẩm
 export const updateCategory = (id: number, 
-  data : {name: String, description: String}) => API.put(
+  data : {name: string, description: string}) => API.put(
     `/categories/${id}`, data);
 
 //API xóa nhóm sản phẩm
@@ -78,5 +78,33 @@ export const updateCartItem = (productId: number, quantity: number) => {
     }
   });
 }
+//API người dùng
+export const fetchUsers = () => API.get("/users", {
+  headers: {
+    'Content-Type': 'application/json',  // Đảm bảo gửi header hợp lệ
+  },});
+export const createUser = (data: any) =>
+                  API.post("/users", data);
+
+//API đơn hàng
+// Kiểu dữ liệu đơn hàng
+/*export type OrderPayload = {
+  orderId: number;
+  orderdate: string;  // ISO format
+  totalamount: number;
+  userId: number;
+  status: 'Đang xử lý' | 'Hoàn thành' | 'Đã hủy';  // Trạng thái đơn hàng
+};*/
+
+// Lấy danh sách đơn hàng
+export const fetchOrders = () =>
+  API.get("/orders", {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+
+
 
 export default API;

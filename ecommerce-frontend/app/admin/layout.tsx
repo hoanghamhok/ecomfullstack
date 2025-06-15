@@ -1,17 +1,21 @@
-// app/admin/layout.tsx
-'use client';
+import React from 'react'
+import AdminSidebar from '@/components/AdminSideBar'
+import AdminNavbar from '@/components/AdminNavbar'
 
-import AdminNavbar from '@/components/AdminNavbar';
-import AdminSidebar from '@/components/AdminSideBar';
+export default function AdminLayout( 
+    {children} : {children : React.ReactNode}){
+        return (
+            <div className='flex h-screen'>
+                {/* Chèn Sidebar */}
+                <AdminSidebar />
 
-export default function AdminLayout({ children }: { children: React.ReactNode }) {
-  return (
-    <div>
-      <AdminNavbar />
-      <div className="flex pt-14 h-screen">
-        <AdminSidebar />
-        <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">{children}</main>
-      </div>
-    </div>
-  );
+                <div className='flex-1'>
+                    {/* Chèn Navbar */}
+                    <AdminNavbar title={''} />
+
+                    {/* Chèn nội dung các trang trong admin */}
+                    <main className='p-4'>{children}</main>
+                </div>
+            </div>
+        )
 }
