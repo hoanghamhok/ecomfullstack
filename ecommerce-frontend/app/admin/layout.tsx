@@ -1,24 +1,17 @@
-import React from 'react'
-import Sidebar from '@/components/Sidebar'
-import Navbar from '@/components/Navbar'
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
-// Kiểm tra quyền truy cập của người dùng
-export default function AdminLayout( 
-    {children} : {children : React.ReactNode}){
-        return (
-            <div className='flex h-screen'>
-                {/* Chèn Sidebar */}
-                <Sidebar />
+// app/admin/layout.tsx
+'use client';
 
-                <div className='flex-1'>
-                    {/* Chèn Navbar */}
-                    
+import AdminNavbar from '@/components/AdminNavbar';
+import AdminSidebar from '@/components/AdminSideBar';
 
-                    {/* Chèn nội dung các trang trong admin */}
-                    <main className='p-4'>{children}</main>
-                </div>
-            </div>
-        )
+export default function AdminLayout({ children }: { children: React.ReactNode }) {
+  return (
+    <div>
+      <AdminNavbar />
+      <div className="flex pt-14 h-screen">
+        <AdminSidebar />
+        <main className="flex-1 p-6 bg-gray-100 overflow-y-auto">{children}</main>
+      </div>
+    </div>
+  );
 }
