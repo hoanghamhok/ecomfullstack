@@ -19,7 +19,7 @@ import {
 import CategoryDropdown from './CategoryDropdown';
 import { useRouter } from 'next/navigation';
 
-export default function Navbar() {
+export default function NavBar() {
   const [mobileOpen, setMobileOpen] = useState(false);
   const [username, setUsername] = useState<string | null>(null);
   const [id, setUserId] = useState<string | null>(null);

@@ -1,5 +1,6 @@
 import Link from "next/link";
 import AddToCartButton from "@/components/AddToCartButton";
+import ProductWishlistButton from '@/components/ProductWishlistButton';
 
 interface Props {
   params: {
@@ -42,6 +43,7 @@ export default async function ProductDetailPage({ params }: Props) {
             className="rounded-lg max-h-[400px] w-full object-contain"
           />
         </div>
+        <ProductWishlistButton productId={product.id} />
         <div className="space-y-5">
           <h1 className="text-3xl font-bold text-gray-900">{product.name}</h1>
           <p className="text-gray-600 text-base">{product.description}</p>
