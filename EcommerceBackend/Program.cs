@@ -6,7 +6,13 @@ using System.Text.Json;
 using System.Security.Claims;
 
 
-var builder = WebApplication.CreateBuilder(args);
+// var builder = WebApplication.CreateBuilder(args);
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    WebRootPath = "wwwroot",
+    ContentRootPath = Directory.GetCurrentDirectory(),
+    Args = args
+});
 
 //Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>

@@ -13,4 +13,5 @@ public class AppDbContext : DbContext{
     public DbSet<Cart> Carts {get; set;}
     public DbSet<Order> Orders {get; set;}
     public DbSet<OrderDetail> OrderDetails {get; set;}
+    public DbSet<Wishlist> Wishlists { get; set; }
 }

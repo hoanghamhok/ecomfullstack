@@ -1,10 +1,12 @@
 import type { Metadata } from "next";
 import { Geist, Geist_Mono } from "next/font/google";
 import "./globals.css";
-import Navbar from "@/components/Navbar"; // ✅ Import navbar
-import UserSidebar from "@/components/UserSidebar"; // ✅ Import UserSidebar
-import Footer from "@/components/Footer"; // ✅ Import footer
-<meta charSet="UTF-8" />
+import Navbar from "@/components/Navbar";
+import UserSidebar from "@/components/UserSidebar";
+import Footer from "@/components/Footer";
+import { WishlistProvider } from "@/components/WishlistContext"; // Thêm dòng này
+import { WishlistIcon } from "@/components/WishlistIcon"; // Thêm dòng này
+// ...existing code...
 
 const geistSans = Geist({
   variable: "--font-geist-sans",
@@ -31,20 +33,21 @@ export default function RootLayout({
       <body
         className={`${geistSans.variable} ${geistMono.variable} antialiased bg-gray-100 text-gray-900`}
       >
-        <Navbar /> {/* ✅ Navbar cố định trên đầu */}
-
-        <div className="flex">
-          {/* ✅ Sidebar cố định bên trái (ẩn trên mobile nếu cần) */}
-          <UserSidebar />
-
-          {/* ✅ Nội dung chính */}
-          <main className="flex-1 min-h-screen p-4">
-            {children}
-          </main>
-        </div>
-        <Footer /> {/* ✅ Footer hiển thị ở cuối trang */}
+        <WishlistProvider>
+          <Navbar />
+          {/* Thêm WishlistIcon vào Navbar nếu muốn */}
+          <div className="ml-auto flex items-center">
+            <WishlistIcon />
+          </div>
+          <div className="flex">
+            <UserSidebar />
+            <main className="flex-1 min-h-screen p-4">
+              {children}
+            </main>
+          </div>
+          <Footer />
+        </WishlistProvider>
       </body>
     </html>
   );
 }
-

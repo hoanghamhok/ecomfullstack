@@ -165,3 +165,35 @@ namespace Controllers
         }
     }
 }
+// GET: api/products/related/{id}
+[HttpGet("related/{id}")]
+public async Task<IActionResult> GetRelatedProducts(int id)
+{
+    var product = await _context.Products.FindAsync(id);
+    if (product == null) return NotFound("Sản phẩm không tồn tại.");
+
+    var relatedProducts = await _context.Products
+        .Include(p => p.Category)
+        .Where(p => p.CategoryId == product.CategoryId && p.Id != id)
+        .OrderByDescending(p => p.CreatedAt)
+        .Take(8)
+        .ToListAsync();
+
+    var result = relatedProducts.Select(p => new ProductDto
+    {
+        Id = p.Id,
+        Name = p.Name,
+        Price = p.Price,
+        Discount = p.Discount,
+        Description = p.Description,
+        ImageUrl = p.ImageUrl,
+        Instock = p.Instock,
+        PriceAfterDiscount = p.Discount.HasValue
+            ? Math.Round(p.Price * (1 - (decimal)p.Discount.Value / 100), 0)
+            : p.Price,
+        CategoryId = p.CategoryId,
+        CategoryName = p.Category?.Name
+    });
+
+    return Ok(result);
+}
