@@ -66,6 +66,8 @@ builder.Services.AddCors(options =>
 builder.Services.AddControllers();
 // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
+builder.Services.AddAuthorization();
+//builder.Services.AddControllers();
 builder.Services.AddSwaggerGen(c =>
 {
     c.SwaggerDoc("v1", new Microsoft.OpenApi.Models.OpenApiInfo
@@ -100,7 +102,10 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-builder.WebHost.UseWebRoot("wwwroot");
+//builder.WebHost.UseWebRoot("wwwroot");
+builder = WebApplication.CreateBuilder(new WebApplicationOptions {
+    WebRootPath = "wwwroot"
+});
 
 var app = builder.Build();
 
