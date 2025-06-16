@@ -162,20 +162,20 @@ export default function NavBar() {
                   className="relative p-3 hover:bg-slate-100 rounded-xl transition-colors duration-200 group"
                 >
                   <Heart className="w-5 h-5 text-slate-600 group-hover:text-red-500" />
-                  <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
-                    2
-                  </span>
+                  {/* <span className="absolute -top-1 -right-1 w-5 h-5 bg-red-500 text-white text-xs rounded-full flex items-center justify-center">
+                    
+                  </span> */}
                 </Link>
 
                 {/* Notifications */}
-                <button className="relative p-3 hover:bg-slate-100 rounded-xl transition-colors duration-200 group">
+                {/* <button className="relative p-3 hover:bg-slate-100 rounded-xl transition-colors duration-200 group">
                   <Bell className="w-5 h-5 text-slate-600 group-hover:text-blue-500" />
                   {notifications > 0 && (
                     <span className="absolute -top-1 -right-1 w-5 h-5 bg-blue-500 text-white text-xs rounded-full flex items-center justify-center animate-pulse">
                       {notifications}
                     </span>
                   )}
-                </button>
+                </button> */}
 
                 {/* Cart */}
                 <Link
