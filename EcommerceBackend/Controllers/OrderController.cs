@@ -22,6 +22,19 @@ namespace Controllers
             var userIdClaim = User.Claims.FirstOrDefault(c => c.Type == "http://schemas.xmlsoap.org/ws/2005/05/identity/claims/nameidentifier");
             return userIdClaim != null ? int.Parse(userIdClaim.Value) : (int?)null;
         }
+        //
+        [HttpGet("admin")]
+        [AllowAnonymous] // hoặc [Authorize(Roles = "Admin")] nếu bạn có phân quyền
+        public async Task<IActionResult> GetAllOrders()
+        {
+            var orders = await _context.Orders
+                .Include(o => o.User)
+                .OrderByDescending(o => o.OrderDate)
+                .ToListAsync();
+
+            return Ok(orders);
+        }
+
 
         /// <summary>
         /// Lấy danh sách các đơn hàng của người dùng

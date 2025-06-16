@@ -43,6 +43,12 @@ namespace Controllers
             return CreatedAtAction(nameof(GetUser),
                             new { id = user.Id }, user);
         }
+        [HttpGet]
+        public async Task<ActionResult<IEnumerable<User>>> GetUsers()
+        {
+            var users = await _context.Users.ToListAsync();
+            return Ok(users);
+        }
 
         //Lấy người dùng
         [HttpGet("{id}")]

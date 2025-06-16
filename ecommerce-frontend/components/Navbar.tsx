@@ -1,5 +1,7 @@
 'use client';
 import Link from 'next/link';
+import { usePathname } from 'next/navigation';
+
 import { useState, useEffect } from 'react';
 import { 
   ShoppingCart, 
@@ -30,9 +32,10 @@ export default function NavBar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
-
+  const pathname = usePathname();
   const toggleMenu = () => setMobileOpen(!mobileOpen);
   const userId = typeof window !== 'undefined' ? localStorage.getItem('id') : null;
+  if (pathname.startsWith('/admin')) return null;
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");

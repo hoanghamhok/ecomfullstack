@@ -1,5 +1,7 @@
 'use client';
 
+import { usePathname } from 'next/navigation';
+
 import Link from 'next/link';
 import { useState, useEffect } from 'react';
 import {
@@ -15,6 +17,7 @@ import {
   TrendingUp,Book,
   Zap
 } from 'lucide-react';
+
 
 const categories = [
   { 
@@ -109,6 +112,8 @@ export default function Sidebar() {
     if (category.isTrending) return 'bg-yellow-500 text-white';
     return '';
   };
+  const pathname = usePathname();
+  if (pathname.startsWith('/admin')) return null;
 
   return (
     <aside className={`${isCollapsed ? 'w-20' : 'w-80'} hidden md:block bg-gradient-to-b from-white to-slate-50 border-r border-slate-200 shadow-xl h-screen sticky top-0 transition-all duration-300 overflow-hidden`}>

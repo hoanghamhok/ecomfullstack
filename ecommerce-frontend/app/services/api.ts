@@ -9,12 +9,12 @@ export const fetchCategories = () => API.get('/categories');
 
 //API tạo mới nhóm sản phẩm
 export const createCategory = (
-  data: {name: String, description: String}) => API.post(
+  data: {name: string, description: string}) => API.post(
     '/categories', data);
 
 //API sửa nhóm sản phẩm
 export const updateCategory = (id: number, 
-  data : {name: String, description: String}) => API.put(
+  data : {name: string, description: string}) => API.put(
     `/categories/${id}`, data);
 
 //API xóa nhóm sản phẩm
@@ -30,6 +30,7 @@ export const fetchProducts = () => API.get("/products", {
     'Content-Type': 'application/json',  // Đảm bảo gửi header hợp lệ
   },});
 export const createProduct = (data: any) =>
+
                   API.post("/products", data);
 export const updateProduct = (id: number, data: any) => 
                   API.put(`/products/${id}`, data);
@@ -78,5 +79,25 @@ export const updateCartItem = (productId: number, quantity: number) => {
     }
   });
 }
+//API người dùng
+export const fetchUsers = () => API.get("/users", {
+  headers: {
+    'Content-Type': 'application/json',  
+  },});
+export const createUser = (data: any) =>
+                  API.post("/users", data);
+
+
+
+// Lấy danh sách đơn hàng
+export const fetchOrders = () =>
+  API.get("/order/admin", {
+    headers: {
+      'Content-Type': 'application/json',
+      Authorization: `Bearer ${localStorage.getItem('token')}`
+    }
+  });
+
+
 
 export default API;

@@ -1,20 +1,17 @@
 import React from 'react'
-import Sidebar from '@/components/Sidebar'
-import Navbar from '@/components/Navbar'
-import { cookies } from "next/headers";
-import { redirect } from "next/navigation";
-import { jwtDecode } from "jwt-decode";
-// Kiểm tra quyền truy cập của người dùng
+import AdminSidebar from '@/components/AdminSideBar'
+import AdminNavbar from '@/components/AdminNavbar'
+
 export default function AdminLayout( 
     {children} : {children : React.ReactNode}){
         return (
             <div className='flex h-screen'>
                 {/* Chèn Sidebar */}
-                <Sidebar />
+                <AdminSidebar />
 
                 <div className='flex-1'>
                     {/* Chèn Navbar */}
-                    
+                    <AdminNavbar title={''} />
 
                     {/* Chèn nội dung các trang trong admin */}
                     <main className='p-4'>{children}</main>

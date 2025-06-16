@@ -5,16 +5,18 @@ using System.Text;
 using System.Text.Json;
 using System.Security.Claims;
 
+var builder = WebApplication.CreateBuilder(new WebApplicationOptions
+{
+    Args = args,
+    WebRootPath = "wwwroot" // ✅ Cấu hình WebRootPath ngay từ đầu
+});
 
-var builder = WebApplication.CreateBuilder(args);
-
-//Add DbContext
+// Add DbContext
 builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration
-    .GetConnectionString("DefaultConnection"))
+    options.UseSqlServer(builder.Configuration.GetConnectionString("DefaultConnection"))
 );
 
-
+// Add Authentication with JWT Bearer
 builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
     .AddJwtBearer(options =>
     {
@@ -28,11 +30,12 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(builder.Configuration["Jwt:Key"])),
             RoleClaimType = ClaimTypes.Role
         };
+
         options.Events = new JwtBearerEvents
         {
             OnChallenge = context =>
             {
-                context.HandleResponse(); // Chặn phản hồi mặc định (HTML)
+                context.HandleResponse();
                 context.Response.StatusCode = 401;
                 context.Response.ContentType = "application/json";
                 var result = JsonSerializer.Serialize(new { message = "Unauthorized" });
@@ -40,7 +43,7 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             },
             OnAuthenticationFailed = context =>
             {
-                // Logging nếu cần
+                // Optional: Log lỗi nếu cần
                 return Task.CompletedTask;
             },
             OnTokenValidated = context =>
@@ -51,20 +54,24 @@ builder.Services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
         };
     });
 
+// Add Authorization (🔑 BẮT BUỘC khi dùng app.UseAuthorization)
+builder.Services.AddAuthorization();
+
+// Add CORS
 builder.Services.AddCors(options =>
 {
-    options.AddPolicy("AllowFrontend",
-        builder => builder
-            .WithOrigins("http://localhost:3000") // Chỉ cho phép frontend từ localhost:3000
-            .AllowAnyHeader()  // Cho phép tất cả headers
-            .AllowAnyMethod()  // Cho phép tất cả phương thức HTTP
-            .AllowCredentials()  // Cho phép gửi thông tin xác thực (cookies, Authorization headers)
+    options.AddPolicy("AllowFrontend", policy =>
+        policy.WithOrigins("http://localhost:3000")
+              .AllowAnyHeader()
+              .AllowAnyMethod()
+              .AllowCredentials()
     );
 });
-// Add services to the container.
 
+// Add Controllers
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+
+// Add Swagger
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen(c =>
 {
@@ -74,7 +81,6 @@ builder.Services.AddSwaggerGen(c =>
         Version = "v1"
     });
 
-    // Thêm cấu hình bảo mật JWT
     c.AddSecurityDefinition("Bearer", new Microsoft.OpenApi.Models.OpenApiSecurityScheme
     {
         Name = "Authorization",
@@ -83,7 +89,7 @@ builder.Services.AddSwaggerGen(c =>
         BearerFormat = "JWT",
         In = Microsoft.OpenApi.Models.ParameterLocation.Header,
         Description = "Nhập token theo định dạng: Bearer {token}"
-    });
+});
 
     c.AddSecurityRequirement(new Microsoft.OpenApi.Models.OpenApiSecurityRequirement
     {
@@ -100,30 +106,24 @@ builder.Services.AddSwaggerGen(c =>
         }
     });
 });
-builder.WebHost.UseWebRoot("wwwroot");
 
 var app = builder.Build();
 
+// Use static files
 app.UseStaticFiles();
 
-
-
-// Configure the HTTP request pipeline.
+// Swagger
 if (app.Environment.IsDevelopment())
 {
     app.UseSwagger();
     app.UseSwaggerUI();
 }
 
+// Use CORS
 app.UseCors("AllowFrontend");
 
+// Middleware pipeline
 app.UseHttpsRedirection();
-
-app.Use(async (context, next) =>
-{    
-    await next.Invoke();
-});
-
 app.UseAuthentication();
 app.UseAuthorization();
 
