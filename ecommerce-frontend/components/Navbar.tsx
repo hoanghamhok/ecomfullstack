@@ -32,10 +32,10 @@ export default function NavBar() {
   const [userMenuOpen, setUserMenuOpen] = useState(false);
   const router = useRouter();
   const [isAdmin, setIsAdmin] = useState(false);
-  const pathname = usePathname();
+  // const pathname = usePathname();
   const toggleMenu = () => setMobileOpen(!mobileOpen);
   const userId = typeof window !== 'undefined' ? localStorage.getItem('id') : null;
-  if (pathname.startsWith('/admin')) return null;
+  // if (pathname.startsWith('/admin')) return null;
 
   useEffect(() => {
     const userJson = localStorage.getItem("user");

@@ -12,10 +12,10 @@ export default function Home() {
   const [products, setProducts] = useState<any[]>([]);
 
   useEffect(() => {
-    fetchProducts().then((res) => {
-      setProducts(res.data as any[]);
-    });
-  }, []);
+  fetchProducts().then((res) => {
+    setProducts(res.data as any[]);
+  });
+}, []);
 
   const handleAddToCart = async (productId: number) => {
     try {
