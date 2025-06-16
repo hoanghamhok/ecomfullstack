@@ -36,17 +36,14 @@ namespace YourNamespace.Controllers
             // Kiểm tra xem sản phẩm đã có trong wishlist của user chưa
             var exists = await _context.Wishlists
                 .AnyAsync(w => w.UserId == dto.UserId && w.ProductId == dto.ProductId);
-
             if (exists)
                 return BadRequest("Sản phẩm đã có trong wishlist.");
-
             // Tạo wishlist entity
             var wishlist = new Wishlist
             {
                 UserId = dto.UserId,
                 ProductId = dto.ProductId
             };
-
             _context.Wishlists.Add(wishlist);
             await _context.SaveChangesAsync();
 

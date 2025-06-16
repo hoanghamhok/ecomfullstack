@@ -23,14 +23,25 @@ namespace Controllers
             return userIdClaim != null ? int.Parse(userIdClaim.Value) : (int?)null;
         }
         //
+
         [HttpGet("admin")]
-        [AllowAnonymous] // hoặc [Authorize(Roles = "Admin")] nếu bạn có phân quyền
         public async Task<IActionResult> GetAllOrders()
         {
             var orders = await _context.Orders
-                .Include(o => o.User)
-                .OrderByDescending(o => o.OrderDate)
-                .ToListAsync();
+                .Include(o => o.OrderDetails)
+                    .ThenInclude(od => od.Product)
+                .Select(o => new OrderDto
+                {
+                    OrderId = o.OrderId,
+                    CreatedAt = o.OrderDate,
+                    OrderDetails = o.OrderDetails.Select(od => new OrderDetailDto
+                    {
+                        ProductId = od.ProductId,
+                        Quantity = od.Quantity,
+                        Price = od.UnitPrice,
+                        ProductName = od.Product.Name
+                    }).ToList()
+                }).ToListAsync();
 
             return Ok(orders);
         }
@@ -55,6 +66,7 @@ namespace Controllers
             return Ok(orders);
         }
 
+
         /// <summary>
         /// Lấy chi tiết đơn hàng theo orderId
         /// </summary>
@@ -65,7 +77,7 @@ namespace Controllers
             var userId = GetUserIdFromToken();
             if (userId == null)
                 return Unauthorized("Không tìm thấy người dùng.");
-            var order = await _context.Orders.Include(o=>o.OrderDetails).ThenInclude(od=>od.Product).Include(o => o.User)
+            var order = await _context.Orders.Include(o => o.OrderDetails).ThenInclude(od => od.Product).Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == userId);
             if (order == null)
                 return NotFound("Không tìm thấy đơn hàng.");
@@ -91,5 +103,42 @@ namespace Controllers
                 })
             });
         }
+        [HttpDelete("{id}")]
+        // [Authorize(Roles = "admin")] // Chỉ admin mới được xóa đơn
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var order = await _context.Orders
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync(o => o.OrderId == id);
+
+            if (order == null)
+            {
+                return NotFound(new { message = "Không tìm thấy đơn hàng." });
+            }
+
+            // Xóa chi tiết đơn hàng trước (nếu có)
+            _context.OrderDetails.RemoveRange(order.OrderDetails);
+
+            // Xóa đơn hàng
+            _context.Orders.Remove(order);
+
+            await _context.SaveChangesAsync();
+
+            return Ok(new { message = "Đã xoá đơn hàng thành công." });
+        }
+    }
+    public class OrderDto
+    {
+        public int OrderId { get; set; }
+        public DateTime CreatedAt { get; set; }
+        public List<OrderDetailDto> OrderDetails { get; set; }
+    }
+
+public class OrderDetailDto
+    {
+        public int ProductId { get; set; }
+        public int Quantity { get; set; }
+        public decimal Price { get; set; }
+        public string ProductName { get; set; }
     }
 }

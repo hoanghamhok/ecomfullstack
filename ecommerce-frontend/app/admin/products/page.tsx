@@ -15,6 +15,7 @@ type Product = {
   categoryId: number;
   category?: any;
   createdAt?: string;
+  categoryName?: string;
 };
 
 type Category = {
@@ -145,7 +146,7 @@ export default function ProductPage() {
                 <td className="px-4 py-2 text-gray-600">{p.description}</td>
                 <td className="px-4 py-2 text-blue-600 font-semibold">{p.price.toLocaleString()} đ</td>
                 <td className="px-4 py-2">{p.instock}</td>
-                <td className="px-4 py-2">{p.category?.name || 'Không có'}</td>
+                <td className="px-4 py-2">{p.categoryName || 'Không có'}</td>
                 <td className="px-4 py-2 text-red-500">{p.discount}%</td>
                 <td className="px-4 py-2">
                   {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover rounded shadow" />}
