@@ -24,7 +24,7 @@ const COLORS = ['#0088FE', '#00C49F', '#FFBB28', '#FF8042'];
 
 export default function Dashboard() {
   return (
-    <div className="pt-24 pl-64 pr-6 pb-6 min-h-screen bg-gray-50 font-sans">
+    <div className="pt-24 pl-72 pr-6 pb-6 min-h-screen bg-gray-50 font-sans">
       <h1 className="text-2xl font-bold text-gray-800 mb-6">📊 Trang Dashboard</h1>
 
       {/* Cards */}

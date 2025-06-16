@@ -69,7 +69,7 @@ export default function Category() {
   };
 
   return (
-    <div className="pt-24 pl-64 pr-6 pb-6 min-h-screen bg-gray-50">
+    <div className="pt-24 pl-72 pr-6 pb-6 min-h-screen bg-gray-50">
       <h1 className="text-3xl font-bold text-gray-800 mb-6">📂 Quản lý nhóm sản phẩm</h1>
 
       {/* Form */}

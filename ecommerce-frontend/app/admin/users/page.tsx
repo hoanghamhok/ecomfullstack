@@ -7,20 +7,22 @@ import { UserPlus } from 'lucide-react';
 type User = {
   id: number;
   username: string;
-  fullname: string;
+  fullName: string;
   password: string;
   phone: string;
   role: string;
+  email: string;
 };
 
 export default function UserPage() {
   const [users, setUsers] = useState<User[]>([]);
   const [form, setForm] = useState<Omit<User, 'id'>>({
     username: '',
-    fullname: '',
     password: '',
+    fullName: '',
+    role: 'nhanvien',
     phone: '',
-    role: ''
+    email: '',
   });
 
   const [modalOpen, setModalOpen] = useState(false);
@@ -29,7 +31,7 @@ export default function UserPage() {
     fetchUsers().then(res => setUsers(res.data as User[]));
   }, []);
 
-  const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
+  const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
     setForm({ ...form, [e.target.name]: e.target.value });
   };
 
@@ -38,7 +40,7 @@ export default function UserPage() {
 
     const isExist = users.some(u => u.username === form.username);
     if (isExist) {
-      alert("Tên người dùng đã tồn tại.");
+      alert('Tên người dùng đã tồn tại.');
       return;
     }
 
@@ -49,8 +51,8 @@ export default function UserPage() {
         setModalOpen(false);
       })
       .catch(err => {
-        console.error("Lỗi tạo người dùng:", err);
-        alert("Tạo người dùng thất bại.");
+        console.error('Lỗi tạo người dùng:', err);
+        alert('Tạo người dùng thất bại.');
       });
   };
 
@@ -58,7 +60,7 @@ export default function UserPage() {
     <div className="ml-[15rem] pt-16 px-8 min-h-screen bg-white font-sans text-gray-800">
       {/* Header */}
       <div className="flex justify-between items-center mb-8">
-        <h1 className="text-4xl font-extrabold text-sky-600 flex items-center gap-3 select-none">
+        <h1 className="text-4xl font-bold text-black-600 flex items-center gap-3 select-none">
           👥 Quản lý người dùng
         </h1>
         <button
@@ -78,10 +80,11 @@ export default function UserPage() {
             <tr className="bg-sky-100 text-sky-900 font-semibold uppercase tracking-wide select-none">
               <th className="py-3 px-6 border-b border-sky-300">ID</th>
               <th className="py-3 px-6 border-b border-sky-300">Tên người dùng</th>
-              <th className="py-3 px-6 border-b border-sky-300">Họ tên</th>
               <th className="py-3 px-6 border-b border-sky-300">Mật khẩu</th>
-              <th className="py-3 px-6 border-b border-sky-300">Điện thoại</th>
+              <th className="py-3 px-6 border-b border-sky-300">Họ tên</th>
+              <th className="py-3 px-6 border-b border-sky-300">Số điện thoại</th>
               <th className="py-3 px-6 border-b border-sky-300">Vai trò</th>
+              <th className="py-3 px-6 border-b border-sky-300">Email</th>
             </tr>
           </thead>
           <tbody>
@@ -92,10 +95,11 @@ export default function UserPage() {
               >
                 <td className="py-3 px-6 border-b border-sky-100">{user.id}</td>
                 <td className="py-3 px-6 border-b border-sky-100 font-medium">{user.username}</td>
-                <td className="py-3 px-6 border-b border-sky-100">{user.fullname}</td>
                 <td className="py-3 px-6 border-b border-sky-100 font-mono text-gray-600">{user.password}</td>
+                <td className="py-3 px-6 border-b border-sky-100">{user.fullName}</td>
                 <td className="py-3 px-6 border-b border-sky-100">{user.phone}</td>
-                <td className="py-3 px-6 border-b border-sky-100 capitalize">{user.role}</td>
+                <td className="py-3 px-6 border-b border-sky-100">{user.role}</td>
+                <td className="py-3 px-6 border-b border-sky-100 capitalize">{user.email}</td>
               </tr>
             ))}
           </tbody>
@@ -123,8 +127,8 @@ export default function UserPage() {
               autoFocus
             />
             <input
-              name="fullname"
-              value={form.fullname}
+              name="fullName"
+              value={form.fullName}
               onChange={handleChange}
               placeholder="Họ tên"
               className="border-2 border-sky-300 rounded-lg px-4 py-3 text-gray-800 placeholder-sky-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition"
@@ -144,17 +148,17 @@ export default function UserPage() {
               placeholder="Điện thoại"
               className="border-2 border-sky-300 rounded-lg px-4 py-3 text-gray-800 placeholder-sky-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition"
             />
-            <select
-              name="role"
-              value={form.role}
+
+            <input
+              name="email"
+              type="email"
+              value={form.email}
               onChange={handleChange}
+              placeholder="Email"
               className="border-2 border-sky-300 rounded-lg px-4 py-3 text-gray-800 placeholder-sky-400 focus:outline-none focus:border-sky-500 focus:ring-1 focus:ring-sky-500 transition"
-              required
-            >
-              <option value="" disabled>Chọn vai trò</option>
-              <option value="admin">Admin</option>
-              <option value="user">User</option>
-            </select>
+            />
+
+            <input type="hidden" name="role" value="nhanvien" />
 
             <div className="flex justify-end gap-5 mt-3">
               <button

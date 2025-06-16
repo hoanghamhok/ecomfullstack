@@ -39,14 +39,27 @@ export default function ProductPage() {
     categoryId: 0,
   });
 
+  const loadProducts = async () => {
+    const res = await fetchProducts();
+    setProducts(res.data as Product[]);
+  };
+
   useEffect(() => {
-    fetchProducts().then(res => setProducts(res.data as Product[]));
+    loadProducts();
     fetchCategories().then(res => setCategories(res.data as Category[]));
   }, []);
 
   const openAddModal = () => {
     setEditingProduct(null);
-    setForm({ name: '', description: '', price: 0, instock: 0, imageUrl: '', discount: 0, categoryId: categories[0]?.id || 0 });
+    setForm({
+      name: '',
+      description: '',
+      price: 0,
+      instock: 0,
+      imageUrl: '',
+      discount: 0,
+      categoryId: categories[0]?.id || 0
+    });
     setModalOpen(true);
   };
 
@@ -59,7 +72,7 @@ export default function ProductPage() {
       instock: product.instock,
       imageUrl: product.imageUrl || '',
       discount: product.discount || 0,
-      categoryId: product.categoryId,
+      categoryId: product.categoryId || categories[0]?.id || 0
     });
     setModalOpen(true);
   };
@@ -70,36 +83,44 @@ export default function ProductPage() {
   };
 
   const handleChange = (e: React.ChangeEvent<HTMLInputElement | HTMLSelectElement>) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    setForm({ ...form, [name]: name === 'price' || name === 'instock' || name === 'discount' || name === 'categoryId' ? Number(value) : value });
   };
 
+  // Lưu sản phẩm (thêm/sửa)
   const handleSave = (e: React.FormEvent) => {
     e.preventDefault();
     if (editingProduct) {
+      // Sửa
       updateProduct(editingProduct.id, form)
         .then(() => {
           setProducts(products.map(p => (p.id === editingProduct.id ? { ...editingProduct, ...form } : p)));
           closeModal();
         });
     } else {
+      // Thêm mới
       createProduct(form)
         .then(res => {
-          setProducts([...products, res.data as Product]);
+          setProducts([...products, res.data as any]);
           closeModal();
         });
     }
   };
 
+   // Xóa sản phẩm
   const handleDelete = (id: number) => {
     if (window.confirm("Bạn có chắc chắn muốn xóa sản phẩm này?")) {
       deleteProduct(id).then(() => setProducts(products.filter(p => p.id !== id)));
     }
   };
 
+
   return (
-    <div className="ml-60 pt-24 px-6 bg-gradient-to-br from-gray-50 to-white min-h-screen">
+    <div className="ml-0 pl-72 pt-24 px-6 bg-gradient-to-br from-gray-50 to-white min-h-screen">
       <h1 className="text-3xl font-bold text-gray-800 mb-4 flex items-center gap-2">📦 Quản lý Sản phẩm</h1>
-      <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition duration-300" onClick={openAddModal}>➕ Thêm mới sản phẩm</button>
+      <button className="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded-lg shadow transition duration-300" onClick={openAddModal}>
+        ➕ Thêm mới sản phẩm
+      </button>
 
       <div className="overflow-x-auto mt-6">
         <table className="min-w-full bg-white shadow-xl rounded-xl overflow-hidden">
@@ -118,13 +139,13 @@ export default function ProductPage() {
           </thead>
           <tbody>
             {products.map((p, index) => (
-              <tr key={p.id} className={`transition duration-200 ease-in-out ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
+              <tr key={p.id} className={`transition duration-200 ${index % 2 === 0 ? 'bg-white' : 'bg-gray-50'} hover:bg-blue-50`}>
                 <td className="px-4 py-2">{p.id}</td>
                 <td className="px-4 py-2 font-medium">{p.name}</td>
                 <td className="px-4 py-2 text-gray-600">{p.description}</td>
                 <td className="px-4 py-2 text-blue-600 font-semibold">{p.price.toLocaleString()} đ</td>
                 <td className="px-4 py-2">{p.instock}</td>
-                <td className="px-4 py-2">{p.category?.name}</td>
+                <td className="px-4 py-2">{p.category?.name || 'Không có'}</td>
                 <td className="px-4 py-2 text-red-500">{p.discount}%</td>
                 <td className="px-4 py-2">
                   {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover rounded shadow" />}
@@ -140,7 +161,7 @@ export default function ProductPage() {
       </div>
 
       <Modal isOpen={modalOpen} onClose={closeModal}>
-        <form onSubmit={handleSave} className="space-y-4 text-gray-800">
+        <form onSubmit={handleSave} className=" bg-white rounded-lg p-6 text-gray-900">
           <h2 className="text-xl font-bold">{editingProduct ? '🛠 Sửa sản phẩm' : '➕ Thêm mới sản phẩm'}</h2>
           <input type="text" name="name" value={form.name} onChange={handleChange} placeholder="Tên sản phẩm" className="w-full border border-gray-300 p-2 rounded focus:outline-none focus:ring-2 focus:ring-blue-500" required />
           <input type="text" name="description" value={form.description} onChange={handleChange} placeholder="Mô tả" className="w-full border border-gray-300 p-2 rounded" />

@@ -30,6 +30,7 @@ export const fetchProducts = () => API.get("/products", {
     'Content-Type': 'application/json',  // Đảm bảo gửi header hợp lệ
   },});
 export const createProduct = (data: any) =>
+
                   API.post("/products", data);
 export const updateProduct = (id: number, data: any) => 
                   API.put(`/products/${id}`, data);

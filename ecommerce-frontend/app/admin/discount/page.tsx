@@ -60,18 +60,12 @@ export default function PromotionPage() {
   };
 
   return (
-    <div className="ml-60 pt-24 bg-gray-50  min-h-screen font-sans text-black">
+    <div className="ml-70  pt-24 bg-gray-50  min-h-screen font-sans text-black">
       <div className="flex justify-between items-center mb-6">
         <h1 className="text-3xl font-bold text-black-500 flex items-center gap-2">
           🎁 Quản lý khuyến mãi
         </h1>
-        <button
-          onClick={() => setModalOpen(true)}
-          className="flex items-center gap-2 bg-blue-400 hover:bg-blue-500 text-white font-semibold py-2 px-4 rounded-lg shadow-md transition"
-        >
-          <Plus size={20} />
-          Thêm sản phẩm mới
-        </button>
+        
       </div>
 
       <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
