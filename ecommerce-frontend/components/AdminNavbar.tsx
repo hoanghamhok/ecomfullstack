@@ -25,7 +25,7 @@ export default function AdminNavbar({ title }: AdminNavbarProps) {
   }, []);
 
   return (
-    <div className="fixed top-0 left-0 right-0 h-24 bg-white shadow-md z-30 px-6 flex items-center justify-between">
+    <div className="fixed top-0 left-0 right-0 h-20 bg-white shadow-md z-50 px-6 flex items-center justify-between">
       {/* Góc trái: Logo */}
       <div className="flex items-center gap-2 font-bold text-xl text-gray-800">
         <FontAwesomeIcon icon={faChartPie} className="text-blue-600 animate-pulse" />

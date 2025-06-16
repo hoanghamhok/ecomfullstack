@@ -3,7 +3,7 @@
 import React, { useEffect, useState } from 'react';
 import { fetchOrders, fetchUsers } from '@/app/services/api';
 
-interface Order {
+type Order = {
   orderId: number;
   orderdate: string;
   totalamount: number;
@@ -11,12 +11,12 @@ interface Order {
   status: string;
   user?: any;
   createdAt?: string;
-}
+};
 
-interface User {
+type User = {
   id: number;
   username: string;
-}
+};
 
 export default function OrderPage() {
   const [orders, setOrders] = useState<Order[]>([]);

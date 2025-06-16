@@ -75,39 +75,46 @@ export default function PromotionPage() {
       </div>
 
       <div className="overflow-x-auto bg-white rounded-xl shadow-lg">
-        <table className="min-w-full text-left text-sm text-gray-800">
-          <thead className="bg-gray-100 text-gray-700 uppercase font-bold">
-            <tr>
-              <th className="py-3 px-6">ID</th>
-              <th className="py-3 px-6">Tên sản phẩm</th>
-              <th className="py-3 px-6">Giá</th>
-              <th className="py-3 px-6">Giảm giá</th>
-            </tr>
-          </thead>
-          <tbody>
-            {products.map(({ id, name, price, discount }) => (
-              <tr
-                key={id}
-                className="border-b border-gray-200 hover:bg-blue-100 transition-colors"
-              >
-                <td className="py-3 px-6">{id}</td>
-                <td className="py-3 px-6 flex items-center gap-2">
-                  <ShoppingBag className="w-4 h-4 text-blue-400" />
-                  {name}
-                </td>
-                <td className="py-3 px-6 flex items-center gap-1">
-                  <BadgeDollarSign className="w-4 h-4 text-green-500" />
-                  {price.toLocaleString('vi-VN')}₫
-                </td>
-                <td className="py-3 px-6 flex items-center gap-1">
-                  <Percent className="w-4 h-4 text-red-400" />
-                  {discount}%
-                </td>
-              </tr>
-            ))}
-          </tbody>
-        </table>
-      </div>
+  <table className="min-w-full text-left text-sm text-gray-800">
+    <thead className="bg-gray-100 text-gray-700 uppercase font-bold">
+      <tr>
+        <th className="py-3 px-6">ID</th>
+        <th className="py-3 px-6">Tên sản phẩm</th>
+        <th className="py-3 px-6">Giá</th>
+        <th className="py-3 px-6">Giảm giá</th>
+      </tr>
+    </thead>
+    <tbody>
+      {products.map(({ id, name, price, discount }) => (
+        <tr
+          key={id}
+          className="border-b border-gray-200 hover:bg-blue-100 transition-colors"
+        >
+          <td className="py-3 px-6 align-middle">{id}</td>
+          <td className="py-3 px-6 align-middle">
+            <div className="flex items-center gap-2">
+              <ShoppingBag className="w-4 h-4 text-blue-400" />
+              <span>{name}</span>
+            </div>
+          </td>
+          <td className="py-3 px-6 align-middle">
+            <div className="flex items-center gap-1">
+              <BadgeDollarSign className="w-4 h-4 text-green-500" />
+              <span>{price.toLocaleString('vi-VN')}₫</span>
+            </div>
+          </td>
+          <td className="py-3 px-6 align-middle">
+            <div className="flex items-center gap-1">
+              <Percent className="w-4 h-4 text-red-400" />
+              <span>{discount}%</span>
+            </div>
+          </td>
+        </tr>
+      ))}
+    </tbody>
+  </table>
+</div>
+
 
       {modalOpen && (
         <div className="fixed inset-0 bg-black bg-opacity-30 backdrop-blur-sm flex justify-center items-center z-50">

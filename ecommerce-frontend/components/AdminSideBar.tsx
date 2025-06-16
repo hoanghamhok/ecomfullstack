@@ -29,7 +29,7 @@ export default function AdminSidebar() {
   ];
 
   return (
-    <aside className="fixed top-20 left-0 w-64 h-screen bg-white shadow-xl rounded-tr-3xl rounded-br-3xl px-6 py-8 z-50 transition-all duration-500 ease-in-out animate-fade-in">
+    <aside className="fixed top-20 left-0 w-72 h-screen bg-white shadow-xl   px-6 py-8 z-50 transition-all duration-500 ease-in-out animate-fade-in">
       
 
       {/* Menu Items */}

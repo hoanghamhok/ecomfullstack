@@ -130,8 +130,8 @@ export default function ProductPage() {
                   {p.imageUrl && <img src={p.imageUrl} alt={p.name} className="w-16 h-16 object-cover rounded shadow" />}
                 </td>
                 <td className="px-4 py-2 space-x-2">
-                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow" onClick={() => openEditModal(p)}>✏️</button>
-                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" onClick={() => handleDelete(p.id)}>🗑️</button>
+                  <button className="bg-yellow-400 hover:bg-yellow-500 text-white px-3 py-1 rounded shadow" onClick={() => openEditModal(p)}>Sửa</button>
+                  <button className="bg-red-500 hover:bg-red-600 text-white px-3 py-1 rounded shadow" onClick={() => handleDelete(p.id)}>Xóa</button>
                 </td>
               </tr>
             ))}

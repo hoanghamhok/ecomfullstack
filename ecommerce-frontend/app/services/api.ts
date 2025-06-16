@@ -81,24 +81,16 @@ export const updateCartItem = (productId: number, quantity: number) => {
 //API người dùng
 export const fetchUsers = () => API.get("/users", {
   headers: {
-    'Content-Type': 'application/json',  // Đảm bảo gửi header hợp lệ
+    'Content-Type': 'application/json',  
   },});
 export const createUser = (data: any) =>
                   API.post("/users", data);
 
-//API đơn hàng
-// Kiểu dữ liệu đơn hàng
-/*export type OrderPayload = {
-  orderId: number;
-  orderdate: string;  // ISO format
-  totalamount: number;
-  userId: number;
-  status: 'Đang xử lý' | 'Hoàn thành' | 'Đã hủy';  // Trạng thái đơn hàng
-};*/
+
 
 // Lấy danh sách đơn hàng
 export const fetchOrders = () =>
-  API.get("/orders", {
+  API.get("/order/admin", {
     headers: {
       'Content-Type': 'application/json',
       Authorization: `Bearer ${localStorage.getItem('token')}`
