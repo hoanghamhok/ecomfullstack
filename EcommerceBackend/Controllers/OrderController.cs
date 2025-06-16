@@ -52,18 +52,14 @@ namespace Controllers
             var userId = GetUserIdFromToken();
             if (userId == null)
                 return Unauthorized("Không tìm thấy người dùng.");
-
             var order = await _context.Orders.Include(o=>o.OrderDetails).ThenInclude(od=>od.Product).Include(o => o.User)
                 .FirstOrDefaultAsync(o => o.OrderId == orderId && o.UserId == userId);
-
             if (order == null)
                 return NotFound("Không tìm thấy đơn hàng.");
-
             var details = await _context.OrderDetails
                 .Where(d => d.OrderId == orderId)
                 .Include(d => d.Product)
                 .ToListAsync();
-
             return Ok(new
             {
                 order.OrderId,

@@ -5,7 +5,9 @@ export default function ProductWishlistButton({ productId }: { productId: number
   const [wishlist, setWishlist] = useState<number[]>([]);
 
   const handleWishlistToggle = async () => {
-    const userId = localStorage.getItem("id");
+    const storedUser = typeof window !== 'undefined' ? localStorage.getItem('user') : null;
+    const user = storedUser ? JSON.parse(storedUser) : null;
+    const userId = user?.id;
     if (!userId) return alert("Vui lòng đăng nhập");
 
     const isWishlisted = wishlist.includes(productId);

@@ -30,6 +30,7 @@ type Product = {
   category?: string;
   rating?: number;
   reviews?: number;
+  discount?: number;
   // discount?: number;
   isNew?: boolean;
   isBestSeller?: boolean;
@@ -471,10 +472,10 @@ export default function ShopPage() {
                     }`}>
                       {product.name}
                     </h3>
-                    <div className="text-blue-600 font-bold text-xl mb-2">{Number(product.price).toLocaleString()} ₫</div>
+                    {/* <div className="text-blue-600 font-bold text-xl mb-2">{Number(product.price).toLocaleString()} ₫</div> */}
                     <div className="flex items-center justify-between mb-4">
                       <div className="flex items-center space-x-2">
-                        {/* {product.discount && product.discount > 0 ? (
+                        {product.discount && product.discount > 0 ? (
                           <>
                             <span className={`font-bold text-emerald-600 ${
                               viewMode === 'list' ? 'text-2xl' : 'text-xl'
@@ -491,7 +492,7 @@ export default function ShopPage() {
                           }`}>
                             {product.price.toLocaleString()}₫
                           </span>
-                        )} */}
+                        )}
                       </div>
                     </div>
 
