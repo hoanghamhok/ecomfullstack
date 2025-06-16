@@ -11,7 +11,7 @@ export default function PromoBanner() {
           className="w-72 h-72 object-contain rounded-2xl shadow-xl"
         />
         <div>
-          <h2 className="text-3xl md:text-4xl font-black text-slate-900 mb-3">Săn deal cực sốc mỗi tuần!</h2>
+          <h2 className="text-3xl md:text-4xl font-bold text-slate-900 mb-3">SĂN DEAL SỐC MỖI TUẦN!</h2>
           <p className="text-lg text-slate-600 mb-6">
             Ưu đãi giảm giá lên đến <span className="text-pink-500 font-bold">50%</span> cho hàng trăm sản phẩm công nghệ, thời trang, phụ kiện.
           </p>

@@ -13,24 +13,29 @@ export default function LoginPage() {
   const [loading, setLoading] = useState(false);
 
   const handleLogin = async (e: React.FormEvent) => {
-    e.preventDefault();
-    setLoading(true);
-    setErrorMessage("");
+  e.preventDefault();
+  setLoading(true);
+  setErrorMessage("");
 
-    try {
-      const response = await login(username, password);
-      const data = response.data as { token: string, user: any };
-      
-      localStorage.setItem("token", data.token);
-      localStorage.setItem("user", JSON.stringify(data.user));
-      
-      window.location.href = "/";
-    } catch (error: any) {
-      setErrorMessage(error.response?.data || "Đã xảy ra lỗi khi đăng nhập");
-    } finally {
-      setLoading(false);
-    }
-  };
+  try {
+    const response = await login(username, password);
+    const data = response.data as { token: string; user: any };
+
+    localStorage.setItem("token", data.token);
+    localStorage.setItem("user", JSON.stringify(data.user));
+
+    window.location.href = "/";
+  } catch (error: any) {
+    const message =
+      typeof error.response?.data === "string"
+        ? error.response.data
+        : error.response?.data?.title || "Đăng nhập thất bại";
+    setErrorMessage(message);
+  } finally {
+    setLoading(false);
+  }
+};
+
 
   return (
     <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-50 to-blue-100 py-12">
@@ -76,7 +81,8 @@ export default function LoginPage() {
               required
             />
           </div>
-
+          {errorMessage && (
+          <p className="text-red-500 text-sm mt-2">{errorMessage}</p>)}
           <button
             type="submit"
             className="w-full bg-gradient-to-r from-blue-500 to-emerald-400 text-white py-3 rounded-xl font-bold hover:from-blue-600 hover:to-emerald-500 transition-all duration-200 shadow-lg flex items-center justify-center"

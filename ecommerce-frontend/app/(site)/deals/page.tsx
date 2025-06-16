@@ -51,7 +51,7 @@ export default function DealsPage() {
             <span className="font-semibold">FLASH SALE</span>
           </div>
           <h1 className="text-4xl md:text-5xl font-black text-slate-900 mb-3">
-            Ưu đãi <span className="text-red-600">hot hôm nay</span>
+            <span className="text-red-600">Ưu đãi hot hôm nay</span>
           </h1>
           <p className="text-lg text-slate-600">Săn deal cực sốc - Số lượng có hạn!</p>
         </div>

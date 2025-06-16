@@ -21,22 +21,21 @@ public class AuthController : Controller{
 
     //API đăng nhập
     [HttpPost("login")]
-    public async Task<ActionResult> Login([FromBody] LoginRequest request){
-        var user = await _context.Users
-            .FirstOrDefaultAsync(
-                u => u.Username == request.Username);
-        String hashPassword = BCrypt.Net.BCrypt
-                .HashPassword(request.Password);
-        if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
-            return Unauthorized();
-        
-        //Tạo token cho phiên đăng nhập
-        var token = GenerateJwtToken(user);
+        public async Task<ActionResult> Login([FromBody] LoginRequest request)
+        {
+            var user = await _context.Users
+                .FirstOrDefaultAsync(u => u.Username == request.Username);
 
-        //Trả về thông tin người dùng và token
-        return Ok(new {Token = token, User = user});
+            // ❌ Không cần hash lại request.Password ở đây
 
-    }
+            // ✅ Chỉ kiểm tra user tồn tại và password khớp
+            if (user == null || !BCrypt.Net.BCrypt.Verify(request.Password, user.Password))
+                return Unauthorized(new { title = "Sai tên đăng nhập hoặc mật khẩu" });
+
+            var token = GenerateJwtToken(user);
+
+            return Ok(new { Token = token, User = user });
+        }
     
 
     //Phương thức tạo token
