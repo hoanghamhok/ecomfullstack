@@ -152,7 +152,7 @@ namespace Controllers
             // Xóa giỏ hàng
             _context.Carts.RemoveRange(cartItems);
             await _context.SaveChangesAsync();
-
+            order.Status = "Completed"; // Cập nhật trạng thái đơn hàng
             return Ok(new { message = "Thanh toán thành công", orderId = order.OrderId });
         }
         public class CartRequest
