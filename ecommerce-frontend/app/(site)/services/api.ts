@@ -1,3 +1,5 @@
+
+
 import axios from 'axios';
 
 const API = axios.create({
@@ -97,7 +99,4 @@ export const fetchOrders = () =>
       Authorization: `Bearer ${localStorage.getItem('token')}`
     }
   });
-
-
-
 export default API;
